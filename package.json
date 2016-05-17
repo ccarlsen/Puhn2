@@ -1,0 +1,33 @@
+{
+  "name": "Puhn",
+  "version": "1.0.0",
+  "description": "Silence is golden",
+  "main": "html/login.html",
+  "window": {
+    "title": "Puhn",
+    "icon": "assets/img/logo.png",
+    "toolbar": false,
+    "frame": false,
+    "width": 400,
+    "height": 300,
+    "min_width": 400,
+    "min_height": 300,
+    "max_width": 400,
+    "max_height": 300,
+    "resizable": false
+  },
+  "dependencies": {
+    "gulp": "^3.8.10",
+    "socket.io-client": "*"
+  },
+  "devDependencies": {
+    "gulp-minify-css": "^0.3.8",
+    "gulp-plumber": "^0.6.6",
+    "gulp-sass": "^2.1.0",
+    "gulp-util": "^3.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ccarlsen/Puhn.git"
+  }
+}
