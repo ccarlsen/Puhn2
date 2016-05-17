@@ -1,0 +1,37 @@
+html {
+	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+body {
+	background: white;
+	font-family: $font;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.5;
+	color: $dark;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+::selection {
+	color: white;
+	background: $blue;
+}
+
+@mixin clearfix() {
+	&:after {
+		content: " ";
+		display: table;
+		clear: both;
+	}
+}

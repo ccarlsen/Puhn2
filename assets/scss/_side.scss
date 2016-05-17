@@ -1,0 +1,221 @@
+.Side {
+	width: 335px;
+	height: 100vh;
+	background: $dark;
+	position: absolute;
+	top: 0; left: 0;
+	overflow: hidden;
+	&-users {
+		width: 100%;
+		height: 50px;
+		background: $blue;
+		box-shadow: 0 0 30px rgba(black, 1);
+		position: absolute;
+		top: 0; left: 0;
+		z-index: 2;
+		@include clearfix();
+		li {
+			width: 50%;
+			height: 50px;
+			font-size: 12px;
+			color: white;
+			position: relative;
+			float: left;
+			padding-top: 12px;
+			img {
+				width: 30px;
+				height: 30px;
+				border-radius: 3px;
+				position: absolute;
+				top: 10px;
+			}
+			h6, time {
+				line-height: 1.0;
+			}
+			time {
+				display: block;
+				opacity: 0.5;
+				margin-top: 2px;
+			}
+			&:after {
+				content: "";
+				width: 12px;
+				height: 12px;
+				border: 2px solid $blue;
+				border-radius: 100%;
+				position: absolute;
+				bottom: 8px;
+			}
+			&:nth-child(1) {
+				text-align: left;
+				padding-left: 60px;
+				img {
+					left: 20px;
+				}
+				&:after {
+					left: 40px;
+				}
+			}
+			&:nth-child(2) {
+				text-align: right;
+				padding-right: 60px;
+				img {
+					right: 20px;
+				}
+				&:after {
+					right: 40px;
+				}
+			}
+			&[data-status="online"] {
+				&:after {
+					background: $green;
+				}
+			}
+			&[data-status="offline"] {
+				&:after {
+					background: $red;
+				}
+			}
+		}
+	}
+	&-gifs, &-sounds {
+		width: 100%;
+		position: absolute;
+		left: 0;
+		overflow-x: hidden;
+		overflow-y: scroll;
+		z-index: 1;
+		&::-webkit-scrollbar {
+			width: 5px;
+		}
+		&::-webkit-scrollbar-track {
+			background: black;
+		}
+		&::-webkit-scrollbar-thumb {
+			background-color: rgba(white, 0.4);
+		}
+		li {
+			position: relative;
+			cursor: pointer;
+			user-select: none;
+		}
+	}
+	&-gifs {
+		height: calc(100% - 220px);
+		top: 50px;
+		font-size: 0;
+		padding: 20px 20px 10px 20px;
+		li {
+			display: inline-block;
+			margin-right: 10px;
+			margin-bottom: 10px;
+			transform-origin: center center;
+			&:nth-child(5n+5) {
+				margin-right: 0;
+			}
+			img {
+				width: 50px;
+				height: 50px;
+				border-radius: 3px;
+			}
+			&:before {
+				content: "";
+				width: 56px;
+				height: 56px;
+				opacity: 0;
+				border: 2px solid $blue;
+				border-radius: 5px;
+				position: absolute;
+				top: -3px; left: -3px;
+				z-index: -1;
+			}
+			&:hover {
+				&:before {
+					opacity: 1;
+				}
+			}
+		}
+	}
+	&-sounds {
+		height: 170px;
+		bottom: 0;
+		padding: 10px 0;
+		li {
+			height: 30px;
+			font-size: 12px;
+			color: white;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			overflow: hidden;
+			line-height: 30px;
+			padding-left: 20px;
+			padding-right: 190px;
+			span {
+				width: 110px;
+				height: 5px;
+				background: rgba(white, 0.15);
+				position: absolute;
+				top: 50%; right: 70px;
+				transform: translateY(-50%);
+				border-radius: 100px;
+				overflow: hidden;
+				i {
+					width: 0%;
+					height: 100%;
+					background: $blue;
+					border-radius: 100px;
+					position: absolute;
+					top: 0; left: 0;
+				}
+			}
+			&:after {
+				content: "" attr(data-seconds) " secs"; ;
+				width: 50px;
+				font-size: 10px;
+				color: white;
+				text-align: right;
+				text-transform: uppercase;
+				position: absolute;
+				top: 50%; right: 20px;
+				transform: translateY(-50%);
+				opacity: 0.2;
+			}
+			&:hover {
+				background: rgba(white, 0.05);
+			}
+			&.playing {
+				color: $blue;
+			}
+		}
+	}
+	&:before, &:after {
+		content: "";
+		width: calc(100% - 5px);
+		height: 50px;
+		position: absolute;
+		left: 0;
+		z-index: 3;
+		pointer-events: none;
+		transition: opacity 0.4s ease-in-out;
+	}
+	&:before {
+		opacity: 0;
+		background: linear-gradient(to bottom, rgba(black, 1) 0%,rgba(black, 0) 100%);
+		top: calc(100% - 170px);
+	}
+	&:after {
+		opacity: 1;
+		background: linear-gradient(to top, rgba(black, 1) 0%,rgba(black, 0) 100%);
+		bottom: 170px;
+	}
+	&.bottomOfGifs {
+		&:after {
+			opacity: 0;
+		}
+	}
+	&.notTopOfSounds {
+		&:before {
+			opacity: 1;
+		}
+	}
+}
