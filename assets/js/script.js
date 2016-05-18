@@ -1,5 +1,18 @@
 var win = require('electron').remote.getCurrentWindow();
 
+// Window actions
+$('.Chat-close').on('click', function() {
+	win.close();
+});
+$('.Chat-maximize').on('click', function() {
+	win.maximize();
+});
+$('.Chat-minimize').on('click', function() {
+	win.minimize();
+});
+
+
+
 $('.Side-gifs').on('scroll', function() {
 	if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
 		$('.Side').addClass('bottomOfGifs');
@@ -41,14 +54,9 @@ $('.Side-sounds li').on('click', function() {
 
 });
 
-
 $('.Side-sounds li').on('dblclick', function() {
 	console.log('send');
 	stopSounds();
-});
-
-$('.Chat-minimize').on('click', function() {
-	win.minimize();
 });
 
 function stopSounds(el) {
