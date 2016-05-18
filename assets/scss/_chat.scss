@@ -17,6 +17,7 @@
 			background-size: 10px 10px;
 			position: absolute;
 			top: 20px;
+			-webkit-app-region: no-drag;
 			&:nth-child(1) {
 				background-image: url(../img/close.svg);
 				right: 20px;
