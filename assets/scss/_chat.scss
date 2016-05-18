@@ -10,6 +10,7 @@
 		box-shadow: 0 0 30px rgba(black, 0.15);
 		position: fixed;
 		top: 0; right: 0;
+		-webkit-app-region: drag;
 		i {
 			width: 10px;
 			height: 10px;
