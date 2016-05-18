@@ -1,3 +1,5 @@
+var win = require('electron').remote.getCurrentWindow();
+
 $('.Side-gifs').on('scroll', function() {
 	if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
 		$('.Side').addClass('bottomOfGifs');
@@ -13,9 +15,6 @@ $('.Side-sounds').on('scroll', function() {
 		$('.Side').removeClass('notTopOfSounds');
 	}
 });
-
-
-
 
 $('.Side-sounds li').on('click', function() {
 
@@ -48,6 +47,9 @@ $('.Side-sounds li').on('dblclick', function() {
 	stopSounds();
 });
 
+$('.Chat-minimize').on('click', function() {
+	win.minimize();
+});
 
 function stopSounds(el) {
 	$('.Side-sounds li').not(el).removeClass('playing');
