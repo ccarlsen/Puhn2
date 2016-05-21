@@ -1,4 +1,50 @@
 var win = require('electron').remote.getCurrentWindow();
+var io = require('socket.io-client');
+var config = require('./config.js');
+
+//Connecting to socket with auth token
+var socket = io.connect(config.http.url, {
+	query: 'token=' + win.token
+});
+
+//When socket connects get Userlist and Last 10 messages
+socket.on('connect', function () {
+	socket.emit('getUserStatus');
+	socket.emit('getOldMessages');
+}).on('disconnect', function () {
+	console.log('disconnected');
+}).on("error", function(error) {
+  if (error.type == "UnauthorizedError" || error.code == "invalid_token") {
+    console.log('Unauthorized');
+  }
+});
+
+//When new message arrives
+socket.on('newMessage', function(content) {
+	//New message content:
+	//content.msg
+	//content.user  (usr, avatar)
+});
+
+//A new user went online
+socket.on('newUserOnline', function(user){
+	//Notification that new user is online
+	//user.firstname + user.avatar
+});
+
+//Loads 10 last messages
+socket.on('loadOldMessages', function(messages) {
+	messages.forEach(function(message) {
+		console.log(message);
+	});
+});
+
+//Updates the userlist
+socket.on('userStatusUpdate', function(userlist) {
+	userlist.forEach(function(user) {
+		console.log(user);
+	});
+});
 
 // Window actions
 $('.Chat-close').on('click', function() {
@@ -10,8 +56,6 @@ $('.Chat-maximize').on('click', function() {
 $('.Chat-minimize').on('click', function() {
 	win.minimize();
 });
-
-
 
 $('.Side-gifs').on('scroll', function() {
 	if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {

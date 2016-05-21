@@ -1,0 +1,93 @@
+var express = require('express');
+var jwt = require('jsonwebtoken');
+var socketioJwt = require('socketio-jwt');
+var app = express();
+var bodyParser = require('body-parser');
+var config = require('./config');
+var mongo = require('./mongo');
+//Chat Variables
+var users = {};
+var sockets = [];
+
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: false
+}));
+
+app.post('/login', function (req, res) {
+  mongo.userAuthenticate(req.body.username, req.body.password, function (isValid) {
+    if(isValid){
+      mongo.getFullUserByUsername(req.body.username, function (user) {
+        var token = jwt.sign(user, config.crypto.jwtSecret, { expiresIn: "10h" });
+        res.json({token: token});
+      });
+    } else {
+      res.status(401).send('login incorrect');
+    }
+  });
+});
+
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
+
+io.use(socketioJwt.authorize({
+  secret: config.crypto.jwtSecret,
+  handshake: true
+}));
+
+io.sockets.on('connection', function (socket) {
+  var docUser = socket.decoded_token._doc;
+  mongo.updateUserStatus(docUser.usr, 1, Date(), function() {
+    mongo.getFullUserByUsername(docUser.usr, function (user) {
+      console.log(user.firstname + ' is now online');
+      users[socket.id] = user;
+      sockets[user._id] = socket;
+      socket.broadcast.emit('newUserOnline', user);
+    });
+  });
+
+  socket.on('getUserStatus', function(){
+    updateUserStatus();
+  });
+
+  function updateUserStatus(){
+    mongo.getAllUser(function(users) {
+      console.log('Get all users for status bar');
+      io.sockets.emit('userStatusUpdate', users);
+    });
+  }
+
+  //Load old messages
+  socket.on('getOldMessages', function(){
+    mongo.getLastMessages(10, function(messages){
+      messages.reverse();
+      console.log('Loaded old messages');
+      socket.emit('loadOldMessages', messages);
+    });
+  });
+
+  //Messages Chat to Chat
+  socket.on('sendMessage', function(message){
+    mongo.createNewMessage(users[socket.id]._id, message, function(done) {
+      if(done) {
+        console.log(users[socket.id].firstname + ': ' + message);
+        io.sockets.emit('newMessage', {msg: message, user: users[socket.id]});
+      }
+    });
+  });
+
+  //User disconnected
+  socket.on('disconnect', function(){
+		if(!users[socket.id]) return;
+		mongo.updateUserStatus(users[socket.id].usr, 0, Date(), function() {
+			console.log(users[socket.id].firstname + ' is now offline');
+			delete sockets[users[socket.id]._id];
+			delete users[socket.id];
+			updateUserStatus();
+		});
+	});
+});
+
+server.listen(config.http.port, function () {
+  console.log('Listening on ' + config.http.port);
+});
