@@ -1,24 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-  	<meta charset="utf-8">
-  	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-  	<title>Puhn2</title>
-  	<meta name="viewport" content="width=device-width, initial-scale=1">
-  	<link rel="stylesheet" href="assets/css/style.css">
-  </head>
-  <body>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Puhn2</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700">
+	<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
 
-		<form id="login">
-			<input id="loginUsername" type="text" placeholder="Username" autocomplete="off" required>
-			<input id="loginPassword" type="password" placeholder="Password" autocomplete="off" required>
-			<button type="submit">Log in</button>
-		</form>
-    <div id='error'></div>
+	<div id="appBar">
+		<div id="actions">
+			<div class="minimize"></div>
+			<div class="maximize"></div>
+			<div class="close"></div>
+		</div>
+	</div>
 
-	</body>
+	<form id="login">
+		<div id="error"></div>
+		<input id="loginUsername" type="text" placeholder="Username" autocomplete="off" required>
+		<input id="loginPassword" type="password" placeholder="Password" autocomplete="off" required>
+		<button type="submit">Log in</button>
+	</form>
 
-	<script>window.$ = window.jQuery = require('./assets/js/vendor/jquery-1.11.3.min.js');</script>
+  <script>window.$ = window.jQuery = require('./assets/js/vendor/jquery-1.11.3.min.js');</script>
   <script>require('./assets/js/login.js')</script>
 
+</body>
 </html>

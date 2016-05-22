@@ -8,7 +8,7 @@ let mainWindow;
 
 app.on('ready', function() {
 
-  loginWindow = new BrowserWindow({width: 400, height: 300, frame: true});
+  loginWindow = new BrowserWindow({width: 300, height: 340, frame: false});
   loginWindow.loadURL(`file://${__dirname}/login.html`);
 
   ipcMain.on('logging-in', (event, arg) => {

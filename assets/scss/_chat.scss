@@ -1,35 +1,91 @@
-.Chat {
-	width: calc(100vw - 335px);
-	height: 100vh;
+#chat {
+	width: calc(100% - 340px);
+	height: 100%;
+	padding: 30px 30px 110px 30px;
 	position: absolute;
 	top: 0; right: 0;
-	&-header {
-		width: calc(100vw - 335px);
+	overflow-x: hidden;
+	overflow-y: scroll; 
+	&::-webkit-scrollbar {
+		display: none;
+	}
+	#messages {
+		.message {
+			min-height: 40px;
+			position: relative;
+			padding-left: 50px;
+			margin-bottom: 20px;
+			.avatar {
+				width: 40px;
+				height: 40px;
+				position: absolute;
+				top: 0; left: 0;
+				img {
+					border-radius: 100%;
+				}
+			}
+			.content, .append {
+				position: relative;
+				padding-right: 100px;
+				-webkit-user-select: text;
+				video {
+					border-radius: 5px;
+				}
+				a {
+					color: $teal;
+					text-decoration: none;
+					cursor: pointer;
+				}
+				.sound {
+					span {
+						font-weight: 500;
+						margin-right: 5px;
+						&:before {
+							content: '"';
+						}
+						&:after {
+							content: '"';
+						}
+					}
+					a {
+						-webkit-user-select: none;
+					}
+				}
+			}
+			.content {
+				padding-top: 10px;
+			}
+			.append {
+				margin-top: 10px;
+			}
+			time {
+				width: 100px;
+				text-transform: uppercase;
+				font-size: 11px;
+				opacity: 0.4;
+				position: absolute;
+				top: 0; right: 0;
+				text-align: right;
+				-webkit-user-select: none;
+			}
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+	#send {
+		width: calc(100% - 400px);
 		height: 50px;
-		background: rgba(white, 0.9);
-		box-shadow: 0 0 30px rgba(black, 0.15);
+		box-shadow: 0 0 0 30px white;
 		position: fixed;
-		top: 0; right: 0;
-		-webkit-app-region: drag;
-		i {
-			width: 10px;
-			height: 10px;
-			background-size: 10px 10px;
-			position: absolute;
-			top: 20px;
-			-webkit-app-region: no-drag;
-			&:nth-child(1) {
-				background-image: url(../img/close.svg);
-				right: 20px;
-			}
-			&:nth-child(2) {
-				background-image: url(../img/maximize.svg);
-				right: 45px;
-			}
-			&:nth-child(3) {
-				background-image: url(../img/minimize.svg);
-				right: 70px;
-			}
+		bottom: 30px; right: 30px;
+	}
+	#typing {
+		font-size: 11px;
+		position: fixed;
+		bottom: 10px; left: 370px;
+		strong {
+			font-weight: 700;
 		}
 	}
 }

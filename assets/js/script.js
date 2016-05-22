@@ -47,68 +47,76 @@ socket.on('userStatusUpdate', function(userlist) {
 });
 
 // Window actions
-$('.Chat-close').on('click', function() {
+$('#actions .close').on('click', function() {
 	win.close();
 });
-$('.Chat-maximize').on('click', function() {
+$('#actions .maximize').on('click', function() {
 	win.maximize();
 });
-$('.Chat-minimize').on('click', function() {
+$('#actions .minimize').on('click', function() {
 	win.minimize();
 });
 
-$('.Side-gifs').on('scroll', function() {
-	if($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
-		$('.Side').addClass('bottomOfGifs');
-	} else {
-		$('.Side').removeClass('bottomOfGifs');
+// SEND
+$('#send').keypress(function(event) {
+	var val = $(this).val();
+	if(event.keyCode == 13) {
+		if(val == "") {
+			return false;
+		} else {
+			alert('SEND MESSAGE!');
+		}
 	}
 });
 
-$('.Side-sounds').on('scroll', function() {
-	if($(this).scrollTop() > 1) {
-		$('.Side').addClass('notTopOfSounds');
-	} else {
-		$('.Side').removeClass('notTopOfSounds');
-	}
+// GIFS
+$('#gifs li').on('click', function() {
+	alert('SEND GIF!');
 });
 
-$('.Side-sounds li').on('click', function() {
-
-	var element = $(this);
-	var timeline = new TimelineMax({paused:true});
-	var progress = element.find('span i');
-	var sound = element.find('audio');
-	var seconds = element.attr('data-seconds');
-
-	stopSounds(element);
-
-	timeline
-		.add(function(){sound[0].play();})
-		.to(progress, seconds, {css:{width: '100%'}, ease:Power0.easeNone})
-		.add(function(){element.removeClass('playing');})
-		.to(progress, 0, {css:{width: '0%'}});
-
-	if(element.hasClass('playing')) {
-		element.removeClass('playing');
+// SOUNDS
+// Side sounds
+$('#sounds li').on('click', function() {
+	var sound = $(this).find('audio');
+	if($(this).hasClass('playing')) {
+		stopSounds();
 	} else {
-		element.addClass('playing');
-		timeline.play();
+		stopSounds();
+		$(this).addClass('playing');
+		sound[0].play();
 	}
-
+	sound[0].addEventListener('ended', resetSounds);
 });
-
-$('.Side-sounds li').on('dblclick', function() {
-	console.log('send');
+$('#sounds li').on('dblclick', function() {
 	stopSounds();
+	alert('SEND SOUND!');
 });
-
-function stopSounds(el) {
-	$('.Side-sounds li').not(el).removeClass('playing');
-	$('.Side-sounds li span i').not(el).width('0%');
-	TweenMax.killAll();
+// Message sounds
+$('.message .sound a').on('click', function() {
+	var sound = $(this).parent().find('audio');
+	if($(this).parent().hasClass('playing')) {
+		stopSounds();
+		$(this).text('Play');
+	} else {
+		stopSounds();
+		$(this).parent().addClass('playing');
+		sound[0].play();
+		$(this).text('Stop');
+	}
+	sound[0].addEventListener('ended', resetSounds);
+});
+// Stop/Reset sounds
+function stopSounds() {
+	$('#sounds li').removeClass('playing');
+	$('.message .sound').removeClass('playing');
+	$('.message .sound a').text('Play');
 	$('audio').each(function(){
 		this.pause();
 		this.currentTime = 0;
 	});
+}
+function resetSounds() {
+	$('#sounds li').removeClass('playing');
+	$('.message .sound').removeClass('playing');
+	$('.message .sound a').text('Play');
 }

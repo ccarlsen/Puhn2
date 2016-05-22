@@ -11,10 +11,11 @@ html {
 body {
 	background: white;
 	font-family: $font;
-	font-size: 14px;
+	font-size: 15px;
 	font-weight: 400;
 	line-height: 1.5;
-	color: $dark;
+	color: #333;
+	cursor: default;
 	-webkit-user-select: none;
 }
 
@@ -26,7 +27,7 @@ img {
 
 ::selection {
 	color: white;
-	background: $blue;
+	background: $teal;
 }
 
 @mixin clearfix() {
@@ -35,4 +36,92 @@ img {
 		display: table;
 		clear: both;
 	}
+}
+
+input {
+	width: 100%;
+	background: white;
+	border: 1px solid $grey - 10;
+	border-radius: 5px;
+	outline: none;
+	padding: 14px;
+	font-family: inherit;
+	font-size: inherit;
+}
+
+#appBar {
+	height: 40px;
+	background: $teal;
+	position: relative;
+	-webkit-app-region: drag;
+	#users {
+		position: absolute;
+		top: 0; left: 0;
+		> div {
+			display: inline-block;
+			margin-top: 13px;
+			margin-left: 20px;
+			text-transform: uppercase;
+			font-weight: 700;
+			font-size: 11px;
+			color: white;
+			&:before {
+				content: "";
+				width: 10px;
+				height: 10px;
+				border-radius: 100%;
+				display: inline-block;
+				vertical-align: middle;
+				margin-right: 5px;
+				margin-top: -2px;
+			}
+			time {
+				margin-left: 5px;
+				font-weight: 400;
+				opacity: 0.5;
+			}
+			&[data-status="online"] {
+				&:before {
+					background: $teal + 60;
+				}
+			}
+			&[data-status="offline"] {
+				&:before {
+					background: $teal - 20;
+				}
+			}
+		}
+	}
+	#actions {
+		font-size: 0;
+		position: absolute;
+		top: 5px; right: 5px;
+		> div {
+			width: 30px;
+			height: 30px;
+			display: inline-block;
+			border-radius: 100%;
+			background-size: 10px 10px;
+			background-position: center;
+			background-repeat: no-repeat;
+			-webkit-app-region: no-drag;
+			&:hover {
+				background-color: $teal - 20;
+			}
+		}
+		.minimize {
+			background-image: url("../img/minimize.svg");
+		}
+		.maximize {
+			background-image: url("../img/maximize.svg");
+		}
+		.close {
+			background-image: url("../img/close.svg");
+		}
+	}
+}
+
+#appContent {
+	height: calc(100vh - 40px);
+	position: relative;
 }
