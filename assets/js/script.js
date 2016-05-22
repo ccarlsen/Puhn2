@@ -1,6 +1,7 @@
 var win = require('electron').remote.getCurrentWindow();
 var io = require('socket.io-client');
 var config = require('./config.js');
+var functions = require('./functions.js')
 
 //Connecting to socket with auth token
 var socket = io.connect(config.http.url, {
@@ -21,9 +22,20 @@ socket.on('connect', function () {
 
 //When new message arrives
 socket.on('newMessage', function(content) {
-	//New message content:
-	//content.msg
-	//content.user  (usr, avatar)
+	var message = '';
+	var date = new Date();
+	var lastuser = $('#messages div.message:last-child').attr('data-user');
+
+	if (content.user.usr == lastuser) {
+		message = '<div class="append">'+ content.msg +'<time datetime="' + date.toISOString() + '"></time></div>';
+		$('#messages div.message:last-child').append(message);
+	} else {
+		message = '<div class="message" data-user="' + content._creator.usr + '"><div class="avatar"><img src="' + content._creator.avatar + '"></div><div class="content">'+ content.msg +'<time datetime="' + date.toISOString() + '"></time></div>'
+		$('#messages').append(message);
+	}
+
+	functions.scrollToBottom();
+	functions.timeAgo();
 });
 
 //A new user went online
@@ -34,16 +46,34 @@ socket.on('newUserOnline', function(user){
 
 //Loads 10 last messages
 socket.on('loadOldMessages', function(messages) {
-	messages.forEach(function(message) {
-		console.log(message);
+	messages.forEach(function(content) {
+		var message 	= '';
+		var lastuser 	= $('#messages div.message:last-child').attr('data-user');
+		if (content._creator.usr == lastuser) {
+			message = '<div class="append">'+ content.msg +'<time datetime="' + content.created + '"></time></div>';
+			$('#messages div.message:last-child').append(message);
+		} else {
+			message = '<div class="message" data-user="' + content._creator.usr + '"><div class="avatar"><img src="' + content._creator.avatar + '"></div><div class="content">'+ content.msg +'<time datetime="' + content.created + '"></time></div>'
+			$('#messages').append(message);
+		}
 	});
+
+	functions.scrollToBottom();
+	functions.timeAgo();
 });
 
 //Updates the userlist
 socket.on('userStatusUpdate', function(userlist) {
+	var html = '';
 	userlist.forEach(function(user) {
-		console.log(user);
+		if (user.status == '1') {
+			html += '<div data-status="online">' + user.firstname + '<time datetime="' + user.signedDate + '"></time></div>';
+		} else {
+			html += '<div data-status="offline">' + user.firstname + '<time datetime="' + user.signedDate + '"></time></div>';
+		}
 	});
+	$("#users").html(html);
+	//timeago
 });
 
 // Window actions
@@ -64,7 +94,9 @@ $('#send').keypress(function(event) {
 		if(val == "") {
 			return false;
 		} else {
-			alert('SEND MESSAGE!');
+			$(this).val('');
+			socket.emit('sendMessage', functions.getProcessedMessage(val));
+			socket.emit('stop typing');
 		}
 	}
 });
