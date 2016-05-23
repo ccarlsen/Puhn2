@@ -28,6 +28,7 @@
 			.content, .append {
 				position: relative;
 				padding-right: 100px;
+				word-break: break-all;
 				-webkit-user-select: text;
 				video {
 					border-radius: 5px;
