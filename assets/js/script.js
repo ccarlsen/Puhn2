@@ -30,7 +30,7 @@ socket.on('newMessage', function(content) {
 		message = '<div class="append">'+ content.msg +'<time datetime="' + date.toISOString() + '"></time></div>';
 		$('#messages div.message:last-child').append(message);
 	} else {
-		message = '<div class="message" data-user="' + content._creator.usr + '"><div class="avatar"><img src="' + content._creator.avatar + '"></div><div class="content">'+ content.msg +'<time datetime="' + date.toISOString() + '"></time></div>'
+		message = '<div class="message" data-user="' + content.user.usr + '"><div class="avatar"><img src="' + content.user.avatar + '"></div><div class="content">'+ content.msg +'<time datetime="' + date.toISOString() + '"></time></div>'
 		$('#messages').append(message);
 	}
 
