@@ -25,7 +25,7 @@ $('#login').submit(function(e) {
           errorText = 'The server is fucked up!'
           break;
         }
-      $('#error').html(errorText).show();
+      alert(errorText);
   });
 });
 

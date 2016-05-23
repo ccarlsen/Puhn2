@@ -13,6 +13,7 @@
 		.message {
 			min-height: 40px;
 			position: relative;
+			padding-top: 10px;
 			padding-left: 50px;
 			margin-bottom: 20px;
 			.avatar {
@@ -51,9 +52,6 @@
 						-webkit-user-select: none;
 					}
 				}
-			}
-			.content {
-				padding-top: 10px;
 			}
 			.append {
 				margin-top: 10px;

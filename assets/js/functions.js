@@ -10,7 +10,7 @@ exports.timeAgo = function() {
 
 //////////////////////////////////////////////////
 exports.scrollToBottom = function() {
-	$('#messages').animate({scrollTop: $('#messages').prop('scrollHeight')}, 200);
+	$('#chat').animate({scrollTop: $('#chat').prop('scrollHeight')}, 200);
 }
 
 //////////////////////////////////////////////////
