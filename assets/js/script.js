@@ -1,31 +1,30 @@
-var win = require('electron').remote.getCurrentWindow();
-var io = require('socket.io-client');
-var config = require('./config.js');
-var functions = require('./functions.js')
+var win 		= require('electron').remote.getCurrentWindow();
+var io 			= require('socket.io-client');
+var config 		= require('./config.js');
+var functions 	= require('./functions.js')
 
-//Connecting to socket with auth token
+// Connecting to socket with auth token
 var socket = io.connect(config.http.url, {
 	query: 'token=' + win.token
 });
 
-//When socket connects get Userlist and Last 10 messages
+// When socket connects get users list and last 10 messages
 socket.on('connect', function () {
 	socket.emit('getUserStatus');
 	socket.emit('getOldMessages');
 }).on('disconnect', function () {
 	console.log('disconnected');
 }).on("error", function(error) {
-  if (error.type == "UnauthorizedError" || error.code == "invalid_token") {
-    console.log('Unauthorized');
-  }
+	if (error.type == "UnauthorizedError" || error.code == "invalid_token") {
+		console.log('Unauthorized');
+	}
 });
 
-//When new message arrives
+// When a new message arrives
 socket.on('newMessage', function(content) {
 	var message = '';
 	var date = new Date();
 	var lastuser = $('#messages div.message:last-child').attr('data-user');
-
 	if (content.user.usr == lastuser) {
 		message = '<div class="append">'+ content.msg +'<time datetime="' + date.toISOString() + '"></time></div>';
 		$('#messages div.message:last-child').append(message);
@@ -33,18 +32,17 @@ socket.on('newMessage', function(content) {
 		message = '<div class="message" data-user="' + content.user.usr + '"><div class="avatar"><img src="' + content.user.avatar + '"></div><div class="content">'+ content.msg +'<time datetime="' + date.toISOString() + '"></time></div>'
 		$('#messages').append(message);
 	}
-
 	functions.scrollToBottom();
 	functions.timeAgo();
 });
 
-//A new user went online
+// When a user comes online
 socket.on('newUserOnline', function(user){
 	//Notification that new user is online
 	//user.firstname + user.avatar
 });
 
-//Loads 10 last messages
+// Loads 10 last messages
 socket.on('loadOldMessages', function(messages) {
 	messages.forEach(function(content) {
 		var message 	= '';
@@ -57,12 +55,11 @@ socket.on('loadOldMessages', function(messages) {
 			$('#messages').append(message);
 		}
 	});
-
 	functions.scrollToBottom();
 	functions.timeAgo();
 });
 
-//Updates the userlist
+// Updates the users list
 socket.on('userStatusUpdate', function(userlist) {
 	var html = '';
 	userlist.forEach(function(user) {
@@ -73,21 +70,10 @@ socket.on('userStatusUpdate', function(userlist) {
 		}
 	});
 	$("#users").html(html);
-	//timeago
+	functions.timeAgo();
 });
 
-// Window actions
-$('#actions .close').on('click', function() {
-	win.close();
-});
-$('#actions .maximize').on('click', function() {
-	win.maximize();
-});
-$('#actions .minimize').on('click', function() {
-	win.minimize();
-});
-
-// SEND
+// Submitting a message
 $('#send').keypress(function(event) {
 	var val = $(this).val();
 	if(event.keyCode == 13) {
@@ -95,19 +81,27 @@ $('#send').keypress(function(event) {
 			return false;
 		} else {
 			$(this).val('');
-			socket.emit('sendMessage', functions.getProcessedMessage(val));
+			socket.emit('sendMessage', val);
 			socket.emit('stop typing');
 		}
 	}
 });
 
+
+
+
+
+
+
 // GIFS
+/*
 $('#gifs li').on('click', function() {
 	alert('SEND GIF!');
 });
+*/
 
 // SOUNDS
-// Side sounds
+/*
 $('#sounds li').on('click', function() {
 	var sound = $(this).find('audio');
 	if($(this).hasClass('playing')) {
@@ -119,11 +113,12 @@ $('#sounds li').on('click', function() {
 	}
 	sound[0].addEventListener('ended', resetSounds);
 });
+
 $('#sounds li').on('dblclick', function() {
 	stopSounds();
 	alert('SEND SOUND!');
 });
-// Message sounds
+
 $('.message .sound a').on('click', function() {
 	var sound = $(this).parent().find('audio');
 	if($(this).parent().hasClass('playing')) {
@@ -137,7 +132,7 @@ $('.message .sound a').on('click', function() {
 	}
 	sound[0].addEventListener('ended', resetSounds);
 });
-// Stop/Reset sounds
+
 function stopSounds() {
 	$('#sounds li').removeClass('playing');
 	$('.message .sound').removeClass('playing');
@@ -147,8 +142,10 @@ function stopSounds() {
 		this.currentTime = 0;
 	});
 }
+
 function resetSounds() {
 	$('#sounds li').removeClass('playing');
 	$('.message .sound').removeClass('playing');
 	$('.message .sound a').text('Play');
 }
+*/
