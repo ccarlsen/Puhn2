@@ -12,6 +12,10 @@ if (localUsername == null || localPassword == null) {
 	$('#loginPassword').val(localPassword);
 }
 
+$('#login button').on('click', function() {
+	$(this).hide();
+});
+
 $('#login').submit(function(event) {
 	event.preventDefault();
 
@@ -28,6 +32,7 @@ $('#login').submit(function(event) {
 	}).done(function (result) {
 		ipcRenderer.send('logging-in', {token: result.token, username: loginUsername});
 	}).fail(function(fail) {
+		$('#login button').show();
 		var errorText = 'Something is fucked!';
 		switch(fail.status) {
 			case 401:
