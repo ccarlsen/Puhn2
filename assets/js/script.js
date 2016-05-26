@@ -96,7 +96,7 @@ $('body').on('click', function() {
 	functions.chatInputFocus();
 });
 
-// Open links in default browser - nfi why this works :D
+// Open links in default browser
 $(document).on('click', 'a[href^="http"]', function(event) {
 	event.preventDefault();
 	shell.openExternal(this.href);
