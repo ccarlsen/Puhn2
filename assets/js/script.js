@@ -74,10 +74,10 @@ socket.on('userStatusUpdate', function(userlist) {
 });
 
 // Submitting a message
-$('#send').keypress(function(event) {
+$('#send').on('keypress', function(event) {
 	var val = $(this).val();
 	if(event.keyCode == 13) {
-		if(val == "") {
+		if(val == '') {
 			return false;
 		} else {
 			$(this).val('');
@@ -87,7 +87,13 @@ $('#send').keypress(function(event) {
 	}
 });
 
-
+// Focus on input when ready and when clicking anywhere
+$(document).on('ready', function() {
+	functions.chatInputFocus();
+});
+$('body').on('click', function() {
+	functions.chatInputFocus();
+});
 
 
 

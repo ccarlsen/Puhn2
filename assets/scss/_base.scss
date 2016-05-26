@@ -89,12 +89,12 @@ input {
 			}
 			&[data-status="online"] {
 				&:before {
-					background: $teal + 60;
+					background: white;
 				}
 			}
 			&[data-status="offline"] {
 				&:before {
-					background: $teal - 20;
+					background: $teal - 35;
 				}
 			}
 		}
