@@ -28,7 +28,7 @@ $('#login').submit(function(event) {
 	localStorage.setItem('localUsername', loginUsername);
 	localStorage.setItem('localPassword', loginPassword);
 
-	$(this).attr('disabled', true);
+	$('#login button').attr('disabled', true);
 
 	$.post(config.http.url + '/login', {
 		username: loginUsername,
@@ -36,7 +36,7 @@ $('#login').submit(function(event) {
 	}).done(function (result) {
 		ipcRenderer.send('logging-in', {token: result.token, username: loginUsername});
 	}).fail(function(fail) {
-		$(this).attr('disabled', false);
+		$('#login button').attr('disabled', false);
 		var errorText = 'Something is fucked!';
 		switch(fail.status) {
 			case 401:
