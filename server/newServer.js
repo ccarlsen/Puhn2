@@ -5,6 +5,8 @@ var app = express();
 var bodyParser = require('body-parser');
 var config = require('./config');
 var mongo = require('./mongo');
+var LEX = require('letsencrypt-express').testing();
+var https = require('spdy');
 //Chat Variables
 var users = {};
 var sockets = [];
@@ -27,8 +29,21 @@ app.post('/login', function (req, res) {
   });
 });
 
-var server = require('http').createServer(app);
+//letsencrypt https config
+var lex = LEX.create({
+  configDir: '/etc/letsencrypt',
+  approveRegistration: function (hostname, cb) {
+    cb(null, {
+      domains: ['puhn.co']
+    , email: 'madetho@live.de'
+    , agreeTos: true
+    });
+  }
+});
+
+var server = https.createServer(lex.httpsOptions, LEX.createAcmeResponder(lex, app));
 var io = require('socket.io')(server);
+server.listen(config.http.port);
 
 io.use(socketioJwt.authorize({
   secret: config.crypto.jwtSecret,
