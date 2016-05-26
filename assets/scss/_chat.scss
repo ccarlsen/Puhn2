@@ -41,6 +41,12 @@
 						color: $teal + 20;
 					}
 				}
+				.emoji {
+					width: 30px;
+					height: 30px;
+					display: inline-block;
+					vertical-align: middle;
+				}
 				.sound {
 					span {
 						font-weight: 500;
@@ -61,6 +67,9 @@
 					.inner {
 						display: inline-block;
 						position: relative;
+						background: $grey + 10;
+						border-top-left-radius: 5px;
+						border-top-right-radius: 5px;
 						img {
 							border-top-left-radius: 5px;
 							border-top-right-radius: 5px;

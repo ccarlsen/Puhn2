@@ -21,6 +21,12 @@ function escapeHTML(string) {
 	.replace(/\n/g, '<br/>');
 }
 
+function escapeRegExp(string) {
+	if(string){
+		return string.replace(/(['()|\[\]\/\\])/g, '\\$1');
+	}
+}
+
 function linkify(content) {
 	var replacePattern1, replacePattern2;
 
@@ -31,6 +37,28 @@ function linkify(content) {
 	content = content.replace(replacePattern2, '$1<a href="http://$2">$2</a>');
 
 	return content;
+}
+
+function emojify(inputText) {
+	var emoji = [
+		{ "file": "crying.svg", "shortcut": ":'(" },
+		{ "file": "dissapointed.svg", "shortcut": "-_-" },
+		{ "file": "smile.svg", "shortcut": ":)" },
+		{ "file": "sad.svg", "shortcut": ":(" },
+		{ "file": "laugh.svg", "shortcut": ":D" },
+		{ "file": "surprised.svg", "shortcut": ":O" },
+		{ "file": "tongue.svg", "shortcut": ":P" },
+		{ "file": "worried.svg", "shortcut": ":S" },
+		{ "file": "wink.svg", "shortcut": ";)" }
+	];
+
+	$.each(emoji, function(key, value) {
+		var replacePattern = new RegExp(escapeRegExp(value.shortcut), 'g');
+		inputText = inputText.replace(replacePattern,
+			'<img src="assets/img/emoji/' + value.file + '" class="emoji" title="' + value.shortcut + '">');
+	});
+
+	return inputText;
 }
 
 exports.getProcessedMessage = function(content) {
@@ -44,6 +72,7 @@ exports.getProcessedMessage = function(content) {
 	} else {
 		content = escapeHTML(content);
 		content = linkify(content);
+		content = emojify(content);
 	}
 
 	return content;

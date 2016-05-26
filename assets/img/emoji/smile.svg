@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="30px" height="30px" viewBox="0 0 30 30" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 3.8.2 (29753) - http://www.bohemiancoding.com/sketch -->
+    <title>Artboard 1</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Artboard-1">
+            <g id="1f642">
+                <g id="Group">
+                    <circle id="Oval" fill="#FFDD67" cx="15" cy="15" r="15"></circle>
+                    <g transform="translate(7.000000, 10.000000)" fill="#664E27">
+                        <path d="M0.658,9.4745 C1.8955,10.202 3.0905,10.6435 4.315,10.9365 C5.5345,11.2295 6.765,11.3545 7.9995,11.3565 C9.235,11.3515 10.4645,11.2265 11.683,10.9335 C12.9075,10.6405 14.102,10.2 15.341,9.4745 C14.8105,10.833 13.633,11.9015 12.321,12.585 C10.994,13.2745 9.49,13.6065 8.0005,13.6055 C6.511,13.6035 5.0085,13.2715 3.682,12.582 C2.3695,11.8985 1.192,10.831 0.657,9.4745" id="Shape"></path>
+                        <ellipse id="Oval" cx="2.251" cy="2.296" rx="2.25" ry="2.25"></ellipse>
+                        <ellipse id="Oval" cx="13.751" cy="2.296" rx="2.25" ry="2.25"></ellipse>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
