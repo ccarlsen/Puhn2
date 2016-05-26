@@ -5,7 +5,7 @@ var app = express();
 var bodyParser = require('body-parser');
 var config = require('./config');
 var mongo = require('./mongo');
-var LEX = require('letsencrypt-express').testing();
+var LEX = require('letsencrypt-express');
 var https = require('spdy');
 //Chat Variables
 var users = {};
