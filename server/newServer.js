@@ -91,6 +91,15 @@ io.sockets.on('connection', function (socket) {
     });
   });
 
+  //Typing
+  socket.on('startTyping', function(){
+    socket.broadcast.emit('typing', {isTyping: true, user: users[socket.id].firstname});
+  });
+
+  socket.on('stopTyping', function(){
+    socket.broadcast.emit('typing', {isTyping: false, user: users[socket.id].firstname});
+  });
+
   //User disconnected
   socket.on('disconnect', function(){
 		if(!users[socket.id]) return;

@@ -74,6 +74,14 @@ socket.on('userStatusUpdate', function(userlist) {
 	functions.timeAgo();
 });
 
+socket.on('typing', function(data){
+	if (data.isTyping) {
+		$('#typing').html('<strong>' + data.user + '</strong> is typing');
+	} else {
+		$('#typing').html('');
+	}
+});
+
 // Submitting a message
 $('#send').on('keypress', function(event) {
 	var val = $(this).val();
@@ -83,10 +91,23 @@ $('#send').on('keypress', function(event) {
 		} else {
 			$(this).val('');
 			socket.emit('sendMessage', functions.getProcessedMessage(val));
-			socket.emit('stop typing');
+			socket.emit('stopTyping');
 		}
 	}
 });
+
+$('#send').on('input', function() {
+		if ($(this).val() == "") {
+			socket.emit('stopTyping');
+		}
+		else {
+			socket.emit('startTyping');
+		}
+	});
+
+	$('#send').focusout(function() {
+		socket.emit('stopTyping');
+	});
 
 // Focus on input when ready and when clicking anywhere
 $(document).on('ready', function() {
