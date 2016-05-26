@@ -40,7 +40,7 @@ exports.getProcessedMessage = function(content) {
 	var imageURL 	= content.replace('/image ', '');
 
 	if (imageTest) {
-		content = '<div class="image"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div>';
+		content = '<div class="image"><div class="inner"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div></div>';
 	} else {
 		content = escapeHTML(content);
 		content = linkify(content);
