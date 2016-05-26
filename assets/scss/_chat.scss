@@ -37,6 +37,9 @@
 					color: $teal;
 					text-decoration: none;
 					cursor: pointer;
+					&:hover {
+						color: $teal + 20;
+					}
 				}
 				.sound {
 					span {
@@ -51,6 +54,29 @@
 					}
 					a {
 						-webkit-user-select: none;
+					}
+				}
+				.image {
+					img {
+						border-top-left-radius: 5px;
+						border-top-right-radius: 5px;
+					}
+					span {
+						color: #aaa;
+						background: $grey;
+						border-bottom-left-radius: 5px;
+						border-bottom-right-radius: 5px;
+						display: block;
+						padding: 10px;
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						overflow: hidden;
+						a {
+							color: #aaa;
+							&:hover {
+								color: $teal;
+							}
+						}
 					}
 				}
 			}

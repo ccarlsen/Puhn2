@@ -1,7 +1,8 @@
 var win 		= require('electron').remote.getCurrentWindow();
 var io 			= require('socket.io-client');
 var config 		= require('./config.js');
-var functions 	= require('./functions.js')
+var functions 	= require('./functions.js');
+var shell 		= require('electron').shell;
 
 // Connecting to socket with auth token
 var socket = io.connect(config.http.url, {
@@ -81,7 +82,7 @@ $('#send').on('keypress', function(event) {
 			return false;
 		} else {
 			$(this).val('');
-			socket.emit('sendMessage', val);
+			socket.emit('sendMessage', functions.getProcessedMessage(val));
 			socket.emit('stop typing');
 		}
 	}
@@ -95,9 +96,11 @@ $('body').on('click', function() {
 	functions.chatInputFocus();
 });
 
-
-
-
+// Open links in default browser
+$('.message a').on('click', function(event) {
+	event.preventDefault();
+	shell.openExternal($(this).attr('href'));
+});
 
 // GIFS
 /*
