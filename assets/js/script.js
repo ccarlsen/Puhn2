@@ -96,10 +96,10 @@ $('body').on('click', function() {
 	functions.chatInputFocus();
 });
 
-// Open links in default browser
-$('.message a').on('click', function(event) {
+// Open links in default browser - nfi why this works :D
+$(document).on('click', 'a[href^="http"]', function(event) {
 	event.preventDefault();
-	shell.openExternal($(this).attr('href'));
+	shell.openExternal(this.href);
 });
 
 // GIFS
