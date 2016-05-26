@@ -4,7 +4,7 @@ var config			= require('./config.js');
 
 // Get username/password from localStorage
 var localUsername = localStorage.getItem('localUsername');
-var localPassword = localStorage.getItem('localPassword');	
+var localPassword = localStorage.getItem('localPassword');
 if (localUsername == null || localPassword == null) {
 	$('#loginUsername').focus();
 } else {
@@ -28,10 +28,8 @@ $('#login').submit(function(event) {
 	localStorage.setItem('localUsername', loginUsername);
 	localStorage.setItem('localPassword', loginPassword);
 
-	$('#login button').on('click', function() {
-		$(this).attr('disabled', true);
-	});
-	
+	$(this).attr('disabled', true);
+
 	$.post(config.http.url + '/login', {
 		username: loginUsername,
 		password: loginPassword
