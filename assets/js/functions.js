@@ -63,8 +63,8 @@ function emojify(inputText) {
 
 exports.getProcessedMessage = function(content) {
 
-	var linkRegex 	= /(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-	var imageTest 	= linkRegex.test(content);
+	var imageRegex 	= /(\/image https?:\/\/.*\.(?:png|jpg|gif))/g;
+	var imageTest 	= imageRegex.test(content);
 	var imageURL 	= content.replace('/image ', '');
 
 	if (imageTest) {

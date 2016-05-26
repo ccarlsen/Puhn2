@@ -12,10 +12,12 @@ if (localUsername == null || localPassword == null) {
 	$('#loginPassword').val(localPassword);
 }
 
-$('#login button').on('click', function() {
-	$(this).hide();
+// Focus on input when ready
+$(document).on('ready', function() {
+	$('#loginUsername').focus();
 });
 
+// Login form submit
 $('#login').submit(function(event) {
 	event.preventDefault();
 
@@ -25,6 +27,10 @@ $('#login').submit(function(event) {
 	// Set username/password in localStorage
 	localStorage.setItem('localUsername', loginUsername);
 	localStorage.setItem('localPassword', loginPassword);
+
+	$('#login button').on('click', function() {
+		$(this).attr('disabled', true);
+	});
 	
 	$.post(config.http.url + '/login', {
 		username: loginUsername,
@@ -32,7 +38,7 @@ $('#login').submit(function(event) {
 	}).done(function (result) {
 		ipcRenderer.send('logging-in', {token: result.token, username: loginUsername});
 	}).fail(function(fail) {
-		$('#login button').show();
+		$(this).attr('disabled', false);
 		var errorText = 'Something is fucked!';
 		switch(fail.status) {
 			case 401:

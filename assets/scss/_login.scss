@@ -44,5 +44,8 @@
 		&:hover {
 			background: rgba(white, 1);
 		}
+		&:disabled {
+			opacity: 0.5;
+		}
 	}
 }
