@@ -1,15 +1,3 @@
-exports.chatInputFocus = function() {
-	$('#send').focus();
-}
-
-exports.timeAgo = function() {
-	$('time').timeago();
-}
-
-exports.scrollToBottom = function() {
-	$('#chat').animate({scrollTop: $('#chat').prop('scrollHeight')}, 200);
-}
-
 function escapeHTML(string) {
 	return String(string)
 	.replace(/&/g, '&amp;')
@@ -39,26 +27,38 @@ function linkify(content) {
 	return content;
 }
 
-function emojify(inputText) {
+function emojify(content) {
 	var emoji = [
-		{ "file": "crying.svg", "shortcut": ":'(" },
+		{ "file": "crying.svg", "shortcut": ":S" },
 		{ "file": "dissapointed.svg", "shortcut": "-_-" },
 		{ "file": "smile.svg", "shortcut": ":)" },
 		{ "file": "sad.svg", "shortcut": ":(" },
 		{ "file": "laugh.svg", "shortcut": ":D" },
 		{ "file": "surprised.svg", "shortcut": ":O" },
 		{ "file": "tongue.svg", "shortcut": ":P" },
-		{ "file": "worried.svg", "shortcut": ":S" },
+		{ "file": "worried.svg", "shortcut": ":/" },
 		{ "file": "wink.svg", "shortcut": ";)" }
 	];
 
 	$.each(emoji, function(key, value) {
 		var replacePattern = new RegExp(escapeRegExp(value.shortcut), 'g');
-		inputText = inputText.replace(replacePattern,
+		content = content.replace(replacePattern,
 			'<img src="assets/img/emoji/' + value.file + '" class="emoji" title="' + value.shortcut + '">');
 	});
 
-	return inputText;
+	return content;
+}
+
+exports.chatInputFocus = function() {
+	$('#send').focus();
+}
+
+exports.timeAgo = function() {
+	$('time').timeago();
+}
+
+exports.scrollToBottom = function() {
+	$('#chat').animate({scrollTop: $('#chat').prop('scrollHeight')}, 200);
 }
 
 exports.getProcessedMessage = function(content) {
