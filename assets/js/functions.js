@@ -61,6 +61,23 @@ exports.scrollToBottom = function() {
 	$('#chat').animate({scrollTop: $('#chat').prop('scrollHeight')}, 200);
 }
 
+exports.showNotification = function(content) {
+	var notification = new Notification('Puhn2', {
+		body: content,
+		silent: true
+	});
+	setTimeout(function() {
+		notification.close();
+	}, 4000);
+}
+
+exports.playSound = function(content) {
+	var sound = new Audio();
+	sound.setAttribute('src', 'assets/ogg/' + content + '.ogg');
+	sound.setAttribute('type', 'audio/ogg');
+	sound.play();
+}
+
 exports.getProcessedMessage = function(content) {
 
 	var imageRegex 	= /(\/image https?:\/\/.*\.(?:png|jpg|gif))/g;

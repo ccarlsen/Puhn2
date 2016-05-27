@@ -3,6 +3,7 @@ var io 			= require('socket.io-client');
 var config 		= require('./config.js');
 var functions 	= require('./functions.js');
 var shell 		= require('electron').shell;
+var app			= require('electron').app;
 
 // Connecting to socket with auth token
 var socket = io.connect(config.http.url, {
@@ -38,9 +39,9 @@ socket.on('newMessage', function(content) {
 });
 
 // When a user comes online
-socket.on('newUserOnline', function(user){
-	//Notification that new user is online
-	//user.firstname + user.avatar
+socket.on('newUserOnline', function(user) {
+	functions.showNotification(user.firstname +' just logged in');
+	functions.playSound('login');
 });
 
 // Loads 10 last messages
@@ -92,22 +93,25 @@ $('#send').on('keypress', function(event) {
 			$(this).val('');
 			socket.emit('sendMessage', functions.getProcessedMessage(val));
 			socket.emit('stopTyping');
+			console.log(app);
+			//app.dock.setBadge('2');
+			//app.dock.bounce();
 		}
 	}
 });
 
 $('#send').on('input', function() {
-		if ($(this).val() == "") {
-			socket.emit('stopTyping');
-		}
-		else {
-			socket.emit('startTyping');
-		}
-	});
-
-	$('#send').focusout(function() {
+	if ($(this).val() == '') {
 		socket.emit('stopTyping');
-	});
+	}
+	else {
+		socket.emit('startTyping');
+	}
+});
+
+$('#send').focusout(function() {
+	socket.emit('stopTyping');
+});
 
 // Focus on input when ready and when clicking anywhere
 $(document).on('ready', function() {
