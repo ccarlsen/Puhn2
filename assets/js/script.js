@@ -1,9 +1,10 @@
-var win 		= require('electron').remote.getCurrentWindow();
+var remote 		= require('electron').remote;
+var win 		= remote.getCurrentWindow();
 var io 			= require('socket.io-client');
 var config 		= require('./config.js');
 var functions 	= require('./functions.js');
-var shell 		= require('electron').shell;
-var app			= require('electron').app;
+var shell 		= remote.shell;
+var app			= remote.app;
 
 // Connecting to socket with auth token
 var socket = io.connect(config.http.url, {
@@ -33,6 +34,13 @@ socket.on('newMessage', function(content) {
 	} else {
 		message = '<div class="message" data-user="' + content.user.usr + '"><div class="avatar"><img src="' + content.user.avatar + '"></div><div class="content">'+ content.msg +'<time datetime="' + date.toISOString() + '"></time></div>'
 		$('#messages').append(message);
+	}
+
+	if(!win.isFocused()){
+		functions.playSound('message');
+		win.flashFrame(true);
+		app.dock.setBadge('2');
+		app.dock.bounce();
 	}
 	functions.scrollToBottom();
 	functions.timeAgo();
@@ -94,8 +102,6 @@ $('#send').on('keypress', function(event) {
 			socket.emit('sendMessage', functions.getProcessedMessage(val));
 			socket.emit('stopTyping');
 			console.log(app);
-			//app.dock.setBadge('2');
-			//app.dock.bounce();
 		}
 	}
 });
