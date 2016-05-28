@@ -1,12 +1,12 @@
 exports.emoji = [
-	{ "file": "crying.svg", "shortcut": ":S" },
+	{ "file": "crying.svg", "shortcut": ":<" },
 	{ "file": "dissapointed.svg", "shortcut": "-_-" },
 	{ "file": "smile.svg", "shortcut": ":)" },
 	{ "file": "sad.svg", "shortcut": ":(" },
 	{ "file": "laugh.svg", "shortcut": ":D" },
 	{ "file": "surprised.svg", "shortcut": ":O" },
 	{ "file": "tongue.svg", "shortcut": ":P" },
-	{ "file": "worried.svg", "shortcut": ":/" },
+	{ "file": "worried.svg", "shortcut": ":S" },
 	{ "file": "wink.svg", "shortcut": ";)" }
 ];
 
