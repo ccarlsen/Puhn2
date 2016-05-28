@@ -49,6 +49,60 @@ function emojify(content) {
 	return content;
 }
 
+function memeify(content) {
+	var memes = [
+		{ "file": "aliens.jpg", "shortcut": "aliens;" },
+		{ "file": "arn.jpg", "shortcut": "arn;" },
+		{ "file": "arn2.jpg", "shortcut": "arn2;" },
+		{ "file": "aww.jpg", "shortcut": "aww;" },
+		{ "file": "brain.jpg", "shortcut": "brain;" },
+		{ "file": "close.jpg", "shortcut": "close;" },
+		{ "file": "cry.jpg", "shortcut": "cry;" },
+		{ "file": "cryfu.jpg", "shortcut": "cryfu;" },
+		{ "file": "dafuq.jpg", "shortcut": "dafuq;" },
+		{ "file": "dat.jpg", "shortcut": "dat;" },
+		{ "file": "dawg.jpg", "shortcut": "dawg;" },
+		{ "file": "dont.jpg", "shortcut": "dont;" },
+		{ "file": "er.jpg", "shortcut": "er;" },
+		{ "file": "fa.jpg", "shortcut": "fa;" },
+		{ "file": "fpalm.jpg", "shortcut": "fpalm;" },
+		{ "file": "fu.jpg", "shortcut": "ffuu;" },
+		{ "file": "fyea.jpg", "shortcut": "fyea;" },
+		{ "file": "genius.jpg", "shortcut": "genius;" },
+		{ "file": "gusta.jpg", "shortcut": "gusta;" },
+		{ "file": "hah.jpg", "shortcut": "hah;" },
+		{ "file": "happy.jpg", "shortcut": "o)" },
+		{ "file": "herp.jpg", "shortcut": "herp;" },
+		{ "file": "holy.jpg", "shortcut": "holy;" },
+		{ "file": "impo.jpg", "shortcut": "impo;" },
+		{ "file": "isee.jpg", "shortcut": "isee;" },
+		{ "file": "jordan.jpg", "shortcut": "jordan;" },
+		{ "file": "lol.jpg", "shortcut": "lol;" },
+		{ "file": "lool.jpg", "shortcut": "LOL;" },
+		{ "file": "luck.jpg", "shortcut": "luck;" },
+		{ "file": "mog.jpg", "shortcut": "mog;" },
+		{ "file": "notbad.jpg", "shortcut": "notbad;" },
+		{ "file": "nvm.jpg", "shortcut": "nvm;" },
+		{ "file": "ok.jpg", "shortcut": "ok;" },
+		{ "file": "ru.jpg", "shortcut": "ru;" },
+		{ "file": "sweet.jpg", "shortcut": "sweet;" },
+		{ "file": "true.jpg", "shortcut": "true;" },
+		{ "file": "waiting.jpg", "shortcut": "waiting;" },
+		{ "file": "why.jpg", "shortcut": "why;" },
+		{ "file": "yay.jpg", "shortcut": "yay;" },
+		{ "file": "yo.jpg", "shortcut": "yo;" },
+		{ "file": "yuno.jpg", "shortcut": "yuno;" }
+	];
+
+	$.each(memes, function(key, value) {
+		var replacePattern = new RegExp(escapeRegExp(value.shortcut), 'g');
+		content = content.replace(replacePattern,
+			'<img src="assets/img/memes/' + value.file + '" class="meme" title="' + value.shortcut + '">');
+	});
+
+	return content;
+}
+
 exports.chatInputFocus = function() {
 	$('#send').focus();
 }
@@ -90,6 +144,7 @@ exports.getProcessedMessage = function(content) {
 		content = escapeHTML(content);
 		content = linkify(content);
 		content = emojify(content);
+		content = memeify(content);
 	}
 
 	return content;

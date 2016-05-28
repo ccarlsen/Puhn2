@@ -49,7 +49,7 @@
         suffixAgo: "",
         suffixFromNow: "",
         inPast: 'any moment now',
-        seconds: "< 1 sec",
+        seconds: "< 1 min",
         minute: "1 min",
         minutes: "%d mins",
         hour: "1 hour",

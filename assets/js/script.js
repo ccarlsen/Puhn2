@@ -36,11 +36,10 @@ socket.on('newMessage', function(content) {
 		$('#messages').append(message);
 	}
 
-	if(!win.isFocused()){
+	if(!win.isFocused()) {
 		functions.playSound('message');
 		win.flashFrame(true);
-		app.dock.setBadge('2');
-		app.dock.bounce();
+		app.dock.bounce('critical');
 	}
 	functions.scrollToBottom();
 	functions.timeAgo();
