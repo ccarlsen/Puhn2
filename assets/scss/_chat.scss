@@ -126,9 +126,25 @@
 	#send {
 		width: calc(100% - 400px);
 		height: 50px;
+		padding: 14px 50px 14px 14px;
 		box-shadow: 0 0 0 30px white;
 		position: fixed;
 		bottom: 30px; right: 30px;
+	}
+	#smiley {
+		width: 20px;
+		height: 20px;
+		opacity: 0.15;
+		background-image: url("../img/smiley.svg");
+		background-size: 20px 20px;
+		background-position: center;
+		background-repeat: no-repeat;
+		position: fixed;
+    	bottom: 45px; right: 45px;
+    	z-index: 99;
+    	&:hover {
+    		opacity: 0.3;
+    	}
 	}
 	#typing {
 		font-size: 11px;
@@ -136,6 +152,50 @@
 		bottom: 10px; left: 370px;
 		strong {
 			font-weight: 700;
+		}
+	}
+	#emoticons {
+		width: calc(100% - 340px);
+		height: calc(100% - 40px);
+		display: none;
+		padding: 40px;
+		background: white;
+		position: fixed;
+		bottom: 0; right: 0;
+		z-index: 98;
+		ul {
+			font-size: 0;
+			margin-bottom: 20px;
+			li {
+				display: inline-block;
+				margin-right: 20px;
+				margin-bottom: 20px;
+				small {
+					text-align: center;
+					display: block;
+					font-size: 14px;
+					margin-top: 5px;
+					line-height: 1.0;
+					opacity: 0.5;
+				}
+			}
+		}
+		#emoji {
+			li {
+				img {
+					width: 30px;
+					height: 30px;
+				}
+			}
+		}
+		#memes {
+			li {
+				img {
+					width: 60px;
+					height: 60px;
+					border-radius: 5px;
+				}
+			}
 		}
 	}
 }

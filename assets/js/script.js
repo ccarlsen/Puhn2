@@ -121,6 +121,7 @@ $('#send').focusout(function() {
 // Focus on input when ready and when clicking anywhere
 $(document).on('ready', function() {
 	functions.chatInputFocus();
+	functions.loadEmoticons();
 });
 $('body').on('click', function() {
 	functions.chatInputFocus();
@@ -130,6 +131,14 @@ $('body').on('click', function() {
 $(document).on('click', 'a[href^="http"]', function(event) {
 	event.preventDefault();
 	shell.openExternal(this.href);
+});
+
+// Show emoticons on smiley hover
+$('#smiley').on('mouseover', function() {
+	$('#emoticons').show();
+});
+$('#smiley').on('mouseleave', function() {
+	$('#emoticons').hide();
 });
 
 // GIFS
