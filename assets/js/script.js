@@ -39,10 +39,14 @@ socket.on('newMessage', function(content) {
 	if(!win.isFocused()) {
 		functions.playSound('message');
 		win.flashFrame(true);
-		app.dock.bounce('critical');
+		if (process.platform == 'darwin') {
+			app.dock.bounce('critical');
+		}
 	}
+
 	functions.scrollToBottom();
 	functions.timeAgo();
+
 });
 
 // When a user comes online
