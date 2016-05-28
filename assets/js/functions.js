@@ -97,8 +97,14 @@ exports.getProcessedMessage = function(content) {
 	var imageTest 	= imageRegex.test(content);
 	var imageURL 	= content.replace('/image ', '');
 
+	var gifRegex 	= /(\/gif https?:\/\/.*\.(?:gif|gifv|webm))/g;
+	var gifTest 	= gifRegex.test(content);
+	var gifURL 		= content.replace('/gif ', '');
+
 	if (imageTest) {
 		content = '<div class="image"><div class="inner"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div></div>';
+	} else if (gifTest) {
+		alert(gifURL);
 	} else {
 		content = escapeHTML(content);
 		content = linkify(content);
