@@ -67,7 +67,7 @@ exports.loadWebms = function() {
 	$.get( config.http.url + '/webms', function( webms ) {
 		$('#gifs').html('');
 		webms.forEach(function(webm) {
-			var content = '<li id="' + webm._id + '" data-link="' + webm.link + '" data-wifth="' + webm.width + '" data-height="' + webm.height + '"><img src="' + webm.thumblink + '"></li>';
+			var content = '<li id="' + webm._id + '" data-link="' + webm.link + '" data-width="' + webm.width + '" data-height="' + webm.height + '"><img src="' + webm.thumblink + '"></li>';
 			$('#gifs').append(content);
 		});
 	});
