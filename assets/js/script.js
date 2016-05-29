@@ -102,9 +102,15 @@ $('#send').on('keypress', function(event) {
 			return false;
 		} else {
 			$(this).val('');
-			socket.emit('sendMessage', functions.getProcessedMessage(val));
+			var content = functions.getProcessedMessage(val);
+			switch (content.mode) {
+				case 'GIFWEBM':
+					socket.emit('uploadGifWebm', content.message);
+					break;
+				default:
+					socket.emit('sendMessage', content.message);
+			}
 			socket.emit('stopTyping');
-			console.log(app);
 		}
 	}
 });

@@ -91,25 +91,30 @@ exports.playSound = function(content) {
 	sound.play();
 }
 
-exports.getProcessedMessage = function(content) {
+exports.getProcessedMessage = function(message) {
+	var content = {};
+	content.message = message;
+	content.mode = 'DEFAULT';
 
 	var imageRegex 	= /(\/image https?:\/\/.*\.(?:png|jpg|gif))/g;
-	var imageTest 	= imageRegex.test(content);
-	var imageURL 	= content.replace('/image ', '');
+	var imageTest 	= imageRegex.test(message);
+	var imageURL 	= message.replace('/image ', '');
 
 	var gifRegex 	= /(\/gif https?:\/\/.*\.(?:gif|gifv|webm))/g;
-	var gifTest 	= gifRegex.test(content);
-	var gifURL 		= content.replace('/gif ', '');
+	var gifTest 	= gifRegex.test(message);
+	var gifURL 		= message.replace('/gif ', '');
 
 	if (imageTest) {
-		content = '<div class="image"><div class="inner"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div></div>';
+		message = '<div class="image"><div class="inner"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div></div>';
+		content.mode = 'IMAGE';
 	} else if (gifTest) {
-		alert(gifURL);
+		content.message = gifURL;
+		content.mode = 'GIFWEBM';
 	} else {
-		content = escapeHTML(content);
-		content = linkify(content);
-		content = emojify(content);
-		content = memeify(content);
+		content.message = escapeHTML(content.message);
+		content.message = linkify(content.message);
+		content.message = emojify(content.message);
+		content.message = memeify(content.message);
 	}
 
 	return content;

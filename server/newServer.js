@@ -7,6 +7,9 @@ var config = require('./config');
 var mongo = require('./mongo');
 var LEX = require('letsencrypt-express');
 var https = require('spdy');
+var http = require('http');
+var fs = require('fs');
+var ffmpeg = require('fluent-ffmpeg');
 //Chat Variables
 var users = {};
 var sockets = [];
@@ -43,7 +46,9 @@ var lex = LEX.create({
 
 var server = https.createServer(lex.httpsOptions, LEX.createAcmeResponder(lex, app));
 var io = require('socket.io')(server);
-server.listen(config.http.port);
+server.listen(config.http.port, function () {
+  console.log('Listening on ' + config.http.port);
+});
 
 io.use(socketioJwt.authorize({
   secret: config.crypto.jwtSecret,
@@ -100,6 +105,33 @@ io.sockets.on('connection', function (socket) {
     socket.broadcast.emit('typing', {isTyping: false, user: users[socket.id].firstname});
   });
 
+  //Upload GIF/WEBM
+  //FFMPEG Installation:
+  //install scripts/install_ffmpeg_ubuntu.sh
+  socket.on('uploadGifWebm', function(fileUrl){
+    sendBotMessage("Adding new webm...");
+    var fileExtension = fileUrl.substr((~-fileUrl.lastIndexOf(".") >>> 0) + 2);
+    var dest = './temp/temp.' + fileExtension;
+    download(fileUrl, dest, function(downloaded){
+      if(downloaded) {
+        ffmpeg(dest)
+        .videoCodec('libvpx')
+        .addOptions(['-crf 12'])
+        .withVideoBitrate(1024)
+        .saveToFile('output.webm')
+        .on('error', function(err, stdout, stderr) {
+          sendBotMessage("Couldn't process '" + fileUrl + "' to Webm.");
+          console.log('Cannot process video: ' + err.message);
+        }).on('end', function() {
+          console.log('Processing finished !');
+          sendBotMessage("Processing finished !");
+        });
+      } else {
+        sendBotMessage("Couldn't download the file");
+      }
+    });
+  });
+
   //User disconnected
   socket.on('disconnect', function(){
 		if(!users[socket.id]) return;
@@ -110,8 +142,30 @@ io.sockets.on('connection', function (socket) {
 			updateUserStatus();
 		});
 	});
+
+  socket.on('error', function() {
+    sendBotMessage("Some error happend... you have to restart the chat :)");
+  });
 });
 
-server.listen(config.http.port, function () {
-  console.log('Listening on ' + config.http.port);
-});
+
+//Functions
+var download = function(url, dest, cb) {
+  var file = fs.createWriteStream(dest);
+  var request = http.get(url, function(response) {
+    response.pipe(file);
+    file.on('finish', function() {
+      file.close();
+      if (cb) cb(true);
+    });
+  }).on('error', function(err) {
+    fs.unlink(dest);
+    if (cb) cb(false);
+  });
+};
+
+//Functions
+var sendBotMessage = function(message) {
+  var bot = {usr: 'Bot', avatar: 'https://puhn.co/avatars/bot.png'};
+  io.sockets.emit('newMessage', {msg: message, user: bot});
+};
