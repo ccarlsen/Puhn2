@@ -94,6 +94,10 @@ socket.on('typing', function(data){
 	}
 });
 
+socket.on('loadWebms', function(){
+	functions.loadWebms();
+});
+
 // Submitting a message
 $('#send').on('keypress', function(event) {
 	var val = $(this).val();
@@ -105,7 +109,7 @@ $('#send').on('keypress', function(event) {
 			var content = functions.getProcessedMessage(val);
 			switch (content.mode) {
 				case 'GIFWEBM':
-					socket.emit('uploadGifWebm', content.message);
+					socket.emit('uploadGifWebm', content);
 					break;
 				default:
 					socket.emit('sendMessage', content.message);
@@ -132,6 +136,7 @@ $('#send').focusout(function() {
 $(document).on('ready', function() {
 	functions.chatInputFocus();
 	functions.loadEmoticons();
+	functions.loadWebms();
 });
 $('body').on('click', function() {
 	functions.chatInputFocus();

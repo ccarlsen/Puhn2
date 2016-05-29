@@ -1,4 +1,5 @@
 var emoticons = require('./emoticons.js');
+var config	= require('./config.js');
 
 function escapeHTML(string) {
 	return String(string)
@@ -62,6 +63,16 @@ exports.loadEmoticons = function() {
 	});
 }
 
+exports.loadWebms = function() {
+	$.get( config.http.url + '/webms', function( webms ) {
+		$('#gifs').html('');
+		webms.forEach(function(webm) {
+			var content = '<li><img src="' + webm.thumblink + '"></li>';
+			$('#gifs').append(content);
+		});
+	});
+}
+
 exports.chatInputFocus = function() {
 	$('#send').focus();
 }
@@ -97,18 +108,20 @@ exports.getProcessedMessage = function(message) {
 	content.mode = 'DEFAULT';
 
 	var imageRegex 	= /(\/image https?:\/\/.*\.(?:png|jpg|gif))/g;
-	var imageTest 	= imageRegex.test(message);
+	var imageTest 	= imageRegex.test(content.message);
 	var imageURL 	= message.replace('/image ', '');
 
-	var gifRegex 	= /(\/gif https?:\/\/.*\.(?:gif|gifv|webm))/g;
-	var gifTest 	= gifRegex.test(message);
-	var gifURL 		= message.replace('/gif ', '');
+	var gifRegex 	= /\/gif\s((https?):\/\/.*\.(?:gif|gifv|webm))(\s(w|h)(\d+))?/g;
+	var gifMatch 	= gifRegex.exec(content.message);
 
 	if (imageTest) {
 		message = '<div class="image"><div class="inner"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div></div>';
 		content.mode = 'IMAGE';
-	} else if (gifTest) {
-		content.message = gifURL;
+	} else if (gifMatch != null) {
+		content.url = gifMatch[1];
+		content.protocol = gifMatch[2];
+		content.resizemode = gifMatch[4];
+		content.size = gifMatch[5];
 		content.mode = 'GIFWEBM';
 	} else {
 		content.message = escapeHTML(content.message);

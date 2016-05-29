@@ -13,60 +13,60 @@ mongoose.connect(config.mongodb.uri, function (err) {
 
 //User Collection Schema
 var userSchema = mongoose.Schema({
-    usr: String,
-    pwd: String,
-    email: String,
-    firstname: String,
-    lastname: String,
-    avatar: String,
-    status: String,
+  usr: String,
+  pwd: String,
+  email: String,
+  firstname: String,
+  lastname: String,
+  avatar: String,
+  status: String,
 	onMobile: String,
 	onPc: String,
 	signedDate: {
-        type: Date,
-        default: Date.now
-    },
-    created: {
-        type: Date,
-        default: Date.now
-    }
+    type: Date,
+    default: Date.now
+  },
+  created: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 //Message Collection Schema
 var chatMessageSchema = mongoose.Schema({
-    _creator: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    msg: String,
-    created: {
-        type: Date,
-        default: Date.now
-    }
+  _creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  msg: String,
+  created: {
+    type: Date,
+    default: Date.now
+  }
 });
 
-//Emoticons Collection Schema
-var emoticonsSchema = mongoose.Schema({
-    _creator: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    link: String,
+//Webm Collection Schema
+var webmsSchema = mongoose.Schema({
+  _creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  link: String,
 	thumblink: String,
-    shortcut: String,
+  shortcut: String,
 	type: String,
 	height: String,
 	width: String,
 	order: Number,
-    created: {
-        type: Date,
-        default: Date.now
-    }
+  created: {
+    type: Date,
+    default: Date.now
+  }
 });
 
 var mongoMessage = mongoose.model('Message', chatMessageSchema);
 var mongoUser = mongoose.model('User', userSchema);
-var mongoEmoticon = mongoose.model('Emoticon', emoticonsSchema);
+var mongoWebm = mongoose.model('Webm', webmsSchema);
 
 /**
  * Create New User
@@ -286,8 +286,8 @@ exports.getLastMessages = function (limit, callback) {
 }
 
 /**
- * Create New Emoticon
- * @method createNewEmoticon
+ * Create New Webm
+ * @method createNewWebm
  * @param {} creator
  * @param {} link
  * @param {} shortcut
@@ -295,33 +295,33 @@ exports.getLastMessages = function (limit, callback) {
  * @param {} callback
  * @return
  */
-exports.createNewEmoticon = function (creator, link, thumblink, shortcut, type, dimension, callback) {
-    var newEmoticon = new mongoEmoticon({
-        _creator: creator,
-        link: link,
-		thumblink: thumblink,
-		shortcut: shortcut,
-		type: type,
-		height: dimension.height,
-		width: dimension.width
+exports.createNewWebm = function (creator, link, thumblink, shortcut, type, height, width, callback) {
+    var newWebm = new mongoWebm({
+      _creator: creator,
+      link: link,
+  		thumblink: thumblink,
+  		shortcut: shortcut,
+  		type: type,
+  		height: height,
+  		width: width
     });
-    //Save Emoticon
-    newEmoticon.save(function (err, user) {
+    //Save Webm
+    newWebm.save(function (err, user) {
         if (err) return handleError(err);
         callback(true);
     });
 }
 
 /**
- * Get all emoticons
- * @method getAllEmoticons
+ * Get all Webms
+ * @method getAllWebms
  * @param {} callback
  * @return
  */
-exports.getAllEmoticons = function (callback) {
-    mongoEmoticon.find().sort({order: 1}).exec(function(err, emoticons){
+exports.getAllWebms = function (callback) {
+    mongoWebm.find().sort({created: 1}).exec(function(err, webms){
 		if(err) return handleError(err);
-		callback(emoticons)
+		callback(webms)
 	});
 }
 
@@ -333,7 +333,7 @@ exports.getAllEmoticons = function (callback) {
  * @return
  */
 exports.shortcutExists = function (checkShortcut, callback) {
-    mongoEmoticon.count({shortcut: checkShortcut}, function(err, count){
+    mongoWebm.count({shortcut: checkShortcut}, function(err, count){
 		if(count > 0) {
 			callback(true)
 		} else {
@@ -342,38 +342,27 @@ exports.shortcutExists = function (checkShortcut, callback) {
 	});
 }
 
-//Update emoticon order
-exports.updateEmoticonOrder = function (smileys, callback) {
-	mongoEmoticon.findOne({ shortcut: smileys.shortcut }, function (err, emoticon){
-	  emoticon.order = smileys.order;
-	  emoticon.save(function (err) {
+//Update Webm order
+exports.updateWebmOrder = function (webms, callback) {
+	mongoWebm.findOne({ shortcut: webms.shortcut }, function (err, webm){
+	  webm.order = webms.order;
+	  webm.save(function (err) {
         if (err) return handleError(err);
 		callback();
 	  });
 	});
 }
 
-//Update emoticon order
-exports.updateSmileyShortcut = function (smileyObject, callback) {
-	mongoEmoticon.findOne({ _id: smileyObject.id }, function (err, emoticon){
-	  emoticon.shortcut = smileyObject.shortcut;
-	  emoticon.save(function (err) {
-        if (err) return handleError(err);
-		callback();
-	  });
+//Gets webm by ID
+exports.getwebmById = function (webmId, callback) {
+	mongoWebm.findOne({ _id: webmId }, function (err, webm){
+	  callback(webm);
 	});
 }
 
-//Get emoticon
-exports.getSmileyById = function (smileyId, callback) {
-	mongoEmoticon.findOne({ _id: smileyId }, function (err, emoticon){
-	  callback(emoticon);
-	});
-}
-
-//Remove emoticon
-exports.removeSmileyById = function (smileyId, callback) {
-	mongoEmoticon.findByIdAndRemove(smileyId, function (err){
+//Remove webm by ID
+exports.removeWebmById = function (webmId, callback) {
+	mongoWebm.findByIdAndRemove(webmId, function (err){
 	  if (err) return handleError(err);
 	  callback();
 	});

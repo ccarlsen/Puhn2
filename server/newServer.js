@@ -18,6 +18,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
+app.use(express.static(__dirname + '/public'));
 
 app.post('/login', function (req, res) {
   mongo.userAuthenticate(req.body.username, req.body.password, function (isValid) {
@@ -30,6 +31,14 @@ app.post('/login', function (req, res) {
       res.status(401).send('login incorrect');
     }
   });
+});
+
+app.get('/webms', function (req, res) {
+	res.header("Content-Type", "application/json");
+	res.header("Access-Control-Allow-Origin", "*");
+	mongo.getAllWebms(function(webms) {
+		res.status(200).send(JSON.stringify(webms));
+	});
 });
 
 //letsencrypt https config
@@ -108,24 +117,62 @@ io.sockets.on('connection', function (socket) {
   //Upload GIF/WEBM
   //FFMPEG Installation:
   //install scripts/install_ffmpeg_ubuntu.sh
-  socket.on('uploadGifWebm', function(fileUrl){
+  socket.on('uploadGifWebm', function(content){
     sendBotMessage("Adding new webm...");
-    var fileExtension = fileUrl.substr((~-fileUrl.lastIndexOf(".") >>> 0) + 2);
-    var dest = './temp/temp.' + fileExtension;
-    download(fileUrl, dest, function(downloaded){
+    var fileUrl = content.url;
+    var width = content.resizemode == 'w' ? content.size : '?';
+    var height = content.resizemode == 'h' ? content.size : '?';
+    var fileExtension = '.' + fileUrl.substr((~-fileUrl.lastIndexOf(".") >>> 0) + 2);
+    var dest = './temp/temp' + fileExtension;
+    var timestamp = new Date().getTime();
+    var outputWebm = config.http.webmfolder + timestamp + '.webm';
+    var outputThumb = config.http.thumbfolder + timestamp + '.png';
+    download(fileUrl, dest, content.protocol, function(downloaded){
       if(downloaded) {
-        ffmpeg(dest)
+        //Creates webm
+        var ffmpegcommand = ffmpeg(dest)
         .videoCodec('libvpx')
         .addOptions(['-crf 12'])
         .withVideoBitrate(1024)
-        .saveToFile('output.webm')
-        .on('error', function(err, stdout, stderr) {
+        .output(outputWebm);
+
+        if(width != '?'){
+          ffmpegcommand.size(width + 'x?');
+        } else if(height != '?') {
+          ffmpegcommand.size('?x' + height);
+        }
+
+        ffmpegcommand.on('error', function(err, stdout, stderr) {
           sendBotMessage("Couldn't process '" + fileUrl + "' to Webm.");
           console.log('Cannot process video: ' + err.message);
         }).on('end', function() {
-          console.log('Processing finished !');
-          sendBotMessage("Processing finished !");
-        });
+          console.log('Processing finished.. taking thumbail!');
+          //When webm created, create thumbail
+          ffmpeg(dest)
+          .addOptions(['-vframes 1'])
+          .size('100x100')
+          .output(outputThumb)
+          .on('end', function() {
+            //When thumbnail created, save to database
+            ffmpeg.ffprobe(outputWebm, function(err, metadata) {
+              mongo.createNewWebm(users[socket.id]._id,
+                config.http.domain + '/webm/' + timestamp + '.webm',
+                config.http.domain + '/thumbnails/' + timestamp + '.png',
+                '',
+                1,
+                metadata.streams[0].height,
+                metadata.streams[0].width,
+                function(saved) {
+                  if(saved){
+                    sendBotMessage("Finished");
+                    io.sockets.emit('loadWebms');
+                  }
+                });
+            });
+          })
+          .run();
+        })
+        .run();
       } else {
         sendBotMessage("Couldn't download the file");
       }
@@ -143,25 +190,41 @@ io.sockets.on('connection', function (socket) {
 		});
 	});
 
-  socket.on('error', function() {
+  socket.on('error', function(error) {
     sendBotMessage("Some error happend... you have to restart the chat :)");
+    console.log(error);
   });
 });
 
 
 //Functions
-var download = function(url, dest, cb) {
+var download = function(url, dest, protocol, cb) {
   var file = fs.createWriteStream(dest);
-  var request = http.get(url, function(response) {
-    response.pipe(file);
-    file.on('finish', function() {
-      file.close();
-      if (cb) cb(true);
+  if(protocol == 'http') {
+    var request = http.get(url, function(response) {
+      response.pipe(file);
+      file.on('finish', function() {
+        file.close();
+        if (cb) cb(true);
+      });
+    }).on('error', function(err) {
+      fs.unlink(dest);
+      if (cb) cb(false);
     });
-  }).on('error', function(err) {
-    fs.unlink(dest);
-    if (cb) cb(false);
-  });
+  } else if(protocol == 'https'){
+    var request = require('https').get(url, function(response) {
+      response.pipe(file);
+      file.on('finish', function() {
+        file.close();
+        if (cb) cb(true);
+      });
+    }).on('error', function(err) {
+      fs.unlink(dest);
+      if (cb) cb(false);
+    });
+  } else {
+    cb(false);
+  }
 };
 
 //Functions
