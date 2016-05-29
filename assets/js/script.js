@@ -156,12 +156,12 @@ $('#smiley').on('mouseleave', function() {
 	$('#emoticons').hide();
 });
 
-// GIFS
-/*
-$('#gifs li').on('click', function() {
-	alert('SEND GIF!');
+// Webms
+
+$('#gifs').on('click', 'li', function() {
+	var webmHtml = '<video width="' + $(this).data('width') + '" height="' + $(this).data('height') + '" src="' + $(this).data('link') + '" class="webm" autoplay="" loop="" muted="muted"></video>';
+	socket.emit('sendMessage', webmHtml);
 });
-*/
 
 // SOUNDS
 /*

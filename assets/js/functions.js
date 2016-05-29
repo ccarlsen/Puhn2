@@ -67,7 +67,7 @@ exports.loadWebms = function() {
 	$.get( config.http.url + '/webms', function( webms ) {
 		$('#gifs').html('');
 		webms.forEach(function(webm) {
-			var content = '<li><img src="' + webm.thumblink + '"></li>';
+			var content = '<li id="' + webm._id + '" data-link="' + webm.link + '" data-wifth="' + webm.width + '" data-height="' + webm.height + '"><img src="' + webm.thumblink + '"></li>';
 			$('#gifs').append(content);
 		});
 	});
@@ -115,8 +115,7 @@ exports.getProcessedMessage = function(message) {
 	var gifMatch 	= gifRegex.exec(content.message);
 
 	if (imageTest) {
-		message = '<div class="image"><div class="inner"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div></div>';
-		content.mode = 'IMAGE';
+		content.message = '<div class="image"><div class="inner"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div></div>';
 	} else if (gifMatch != null) {
 		content.url = gifMatch[1];
 		content.protocol = gifMatch[2];
