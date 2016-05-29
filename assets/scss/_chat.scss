@@ -34,11 +34,11 @@
 					border-radius: 5px;
 				}
 				a {
-					color: $teal;
+					color: $blue;
 					text-decoration: none;
 					cursor: pointer;
 					&:hover {
-						color: $teal + 20;
+						color: $blue + 20;
 					}
 				}
 				.emoji {
@@ -98,7 +98,7 @@
 							a {
 								color: #aaa;
 								&:hover {
-									color: $teal;
+									color: $blue;
 								}
 							}
 						}

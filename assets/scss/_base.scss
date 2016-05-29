@@ -1,6 +1,6 @@
 $font:	"Roboto", Helvetica, Arial, sans-serif;
 
-$teal:	#00BFA5;
+$blue:	#2196F3;
 $grey:	#ECEFF1;
 $dark:	#006064;
 
@@ -34,7 +34,7 @@ img {
 
 ::selection {
 	color: white;
-	background: $teal;
+	background: $blue;
 }
 
 @mixin clearfix() {
@@ -58,7 +58,7 @@ input {
 
 #appBar {
 	height: 40px;
-	background: $teal;
+	background: $blue;
 	position: relative;
 	-webkit-app-region: drag;
 	#users {
@@ -94,7 +94,7 @@ input {
 			}
 			&[data-status="offline"] {
 				&:before {
-					background: $teal - 35;
+					background: $blue - 35;
 				}
 			}
 		}
@@ -113,7 +113,7 @@ input {
 			background-repeat: no-repeat;
 			-webkit-app-region: no-drag;
 			&:hover {
-				background-color: $teal - 20;
+				background-color: $blue - 20;
 			}
 		}
 		.minimize {
