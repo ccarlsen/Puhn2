@@ -319,7 +319,7 @@ exports.createNewWebm = function (creator, link, thumblink, shortcut, type, heig
  * @return
  */
 exports.getAllWebms = function (callback) {
-    mongoWebm.find().sort({created: 1}).exec(function(err, webms){
+    mongoWebm.find({type: 1}).sort({created: 1}).exec(function(err, webms){
 		if(err) return handleError(err);
 		callback(webms)
 	});
@@ -365,6 +365,17 @@ exports.removeWebmById = function (webmId, callback) {
 	mongoWebm.findByIdAndRemove(webmId, function (err){
 	  if (err) return handleError(err);
 	  callback();
+	});
+}
+
+//Deactivate webm by ID
+exports.deactivateWebmById = function (webmId, callback) {
+  mongoWebm.findOne({ _id: webmId }, function (err, webm){
+	  webm.type = 0;
+	  webm.save(function (err) {
+        if (err) return handleError(err);
+		callback();
+	  });
 	});
 }
 /**

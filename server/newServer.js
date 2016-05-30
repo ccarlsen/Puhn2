@@ -41,6 +41,13 @@ app.get('/webms', function (req, res) {
 	});
 });
 
+app.delete('/webms/:id', function (req, res) {
+  console.log('Deleting Webm: ' + req.params.id);
+	mongo.deactivateWebmById(req.params.id, function() {
+    res.send(req.body);
+	});
+});
+
 //letsencrypt https config
 var lex = LEX.create({
   configDir: '/etc/letsencrypt',
@@ -112,6 +119,10 @@ io.sockets.on('connection', function (socket) {
 
   socket.on('stopTyping', function(){
     socket.broadcast.emit('typing', {isTyping: false, user: users[socket.id].firstname});
+  });
+
+  socket.on('updateWebms', function(){
+    io.sockets.emit('loadWebms');
   });
 
   //Upload GIF/WEBM

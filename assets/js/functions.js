@@ -73,6 +73,16 @@ exports.loadWebms = function() {
 	});
 }
 
+exports.deleteWebmById = function(id, callback) {
+	$.ajax({
+    url: config.http.url + '/webms/' + id,
+    type: 'DELETE',
+    success: function(result) {
+        callback();
+    }
+	});
+}
+
 exports.chatInputFocus = function() {
 	$('#send').focus();
 }

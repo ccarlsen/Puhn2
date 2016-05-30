@@ -162,7 +162,9 @@ var gifMenu = new Menu();
 var gifMenuItem = new MenuItem({
 	label: 'Delete',
 	click: () => {
-		alert('Please fucking delete - ' + gifToDelete);
+		functions.deleteWebmById(gifToDelete, function(){
+			socket.emit('updateWebms');
+		});
 	}
 });
 
