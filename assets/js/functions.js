@@ -124,6 +124,9 @@ exports.getProcessedMessage = function(message) {
 	var gifRegex 	= /\/gif\s((https?):\/\/.*\.(?:gif|gifv|webm))(\s(w|h)(\d+))?/g;
 	var gifMatch 	= gifRegex.exec(content.message);
 
+	var soundRegex 	= /\/sound\s((https?):\/\/.*\.(?:mp3|ogg|wav))(\s(w|h)(\d+))?/g;
+	//var soundMatch 	= soundRegex.exec(content.message);
+
 	if (imageTest) {
 		content.message = '<div class="image"><div class="inner"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div></div>';
 	} else if (gifMatch != null) {

@@ -185,6 +185,17 @@ $('#gifs').on('contextmenu', 'li', function(event) {
 
 // SOUNDS
 /*
+
+HTML FOR SOUND
+
+<div class="sound">
+	<span>HAHAHAHAHAHA</span>
+	<a href="#">Play</a>
+	<audio><source src="assets/mp3/HAHAHAHAHA.mp3" type="audio/mpeg"></audio> <- if mp3
+	<audio><source src="assets/mp3/HAHAHAHAHA.wav" type="audio/wav"></audio> <- if wav
+	<audio><source src="assets/mp3/HAHAHAHAHA.ogg" type="audio/ogg"></audio> <- if ogg
+</div>
+
 $('#sounds li').on('click', function() {
 	var sound = $(this).find('audio');
 	if($(this).hasClass('playing')) {
