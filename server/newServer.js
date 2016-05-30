@@ -140,6 +140,10 @@ io.sockets.on('connection', function (socket) {
     io.sockets.emit('loadWebms');
   });
 
+  socket.on('sendSound', function(id){
+    io.sockets.emit('receiveSound', id);
+  });
+
   //Upload GIF/WEBM
   //FFMPEG Installation:
   //install scripts/install_ffmpeg_ubuntu.sh
