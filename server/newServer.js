@@ -48,6 +48,21 @@ app.delete('/webms/:id', function (req, res) {
 	});
 });
 
+app.get('/sounds', function (req, res) {
+	res.header("Content-Type", "application/json");
+	res.header("Access-Control-Allow-Origin", "*");
+	mongo.getAllSounds(function(sounds) {
+		res.status(200).send(JSON.stringify(sounds));
+	});
+});
+
+app.delete('/sounds/:id', function (req, res) {
+  console.log('Deleting Sound: ' + req.params.id);
+	mongo.deactivateSoundById(req.params.id, function() {
+    res.send(req.body);
+	});
+});
+
 //letsencrypt https config
 var lex = LEX.create({
   configDir: '/etc/letsencrypt',
@@ -184,6 +199,28 @@ io.sockets.on('connection', function (socket) {
           .run();
         })
         .run();
+      } else {
+        sendBotMessage("Couldn't download the file!");
+      }
+    });
+  });
+
+  //Upload Sound (MP3,WAV,OGG)
+  socket.on('uploadSound', function(content){
+    sendBotMessage("Creating new Sound...");
+    var fileUrl = content.url;
+    var format = fileUrl.substr((~-fileUrl.lastIndexOf(".") >>> 0) + 2);
+    var timestamp = new Date().getTime();
+    var filename = timestamp + '.' + format;
+    var dest = config.http.soundsfolder + filename;
+    download(fileUrl, dest, content.protocol, function(downloaded){
+      if(downloaded) {
+        mongo.createNewSound(users[socket.id]._id, config.http.domain + '/sounds/' + filename, content.title, format, 1, function(saved) {
+            if(saved){
+              sendBotMessage("Done!");
+              io.sockets.emit('loadSounds');
+            }
+          });
       } else {
         sendBotMessage("Couldn't download the file!");
       }

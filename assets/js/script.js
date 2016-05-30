@@ -98,6 +98,10 @@ socket.on('loadWebms', function(){
 	functions.loadWebms();
 });
 
+socket.on('loadSounds', function(){
+	functions.loadSounds();
+});
+
 // Submitting a message
 $('#send').on('keypress', function(event) {
 	var val = $(this).val();
@@ -110,6 +114,9 @@ $('#send').on('keypress', function(event) {
 			switch (content.mode) {
 				case 'GIFWEBM':
 					socket.emit('uploadGifWebm', content);
+					break;
+				case 'SOUND':
+					socket.emit('uploadSound', content);
 					break;
 				default:
 					socket.emit('sendMessage', content.message);
@@ -137,6 +144,7 @@ $(document).on('ready', function() {
 	functions.chatInputFocus();
 	functions.loadEmoticons();
 	functions.loadWebms();
+	functions.loadSounds();
 });
 $('body').on('click', function() {
 	functions.chatInputFocus();
@@ -184,19 +192,8 @@ $('#gifs').on('contextmenu', 'li', function(event) {
 
 
 // SOUNDS
-/*
 
-HTML FOR SOUND
-
-<div class="sound">
-	<span>HAHAHAHAHAHA</span>
-	<a href="#">Play</a>
-	<audio><source src="assets/mp3/HAHAHAHAHA.mp3" type="audio/mpeg"></audio> <- if mp3
-	<audio><source src="assets/mp3/HAHAHAHAHA.wav" type="audio/wav"></audio> <- if wav
-	<audio><source src="assets/mp3/HAHAHAHAHA.ogg" type="audio/ogg"></audio> <- if ogg
-</div>
-
-$('#sounds li').on('click', function() {
+$('#sounds').on('click', 'li', function() {
 	var sound = $(this).find('audio');
 	if($(this).hasClass('playing')) {
 		stopSounds();
@@ -208,12 +205,16 @@ $('#sounds li').on('click', function() {
 	sound[0].addEventListener('ended', resetSounds);
 });
 
-$('#sounds li').on('dblclick', function() {
+$('#sounds').on('dblclick', 'li', function() {
 	stopSounds();
-	alert('SEND SOUND!');
+	var src = $(this).parent().find('source').attr('src');
+	var type = $(this).parent().find('source').attr('type');
+	var title = $(this).parent().find('audio').data('title');
+	var content = '<div class="sound"><span>' + title + '</span><a href="#">Play</a><audio><source src="' + 	src + '" type="' + type + '"></audio></div>';
+	socket.emit('sendMessage', content);
 });
 
-$('.message .sound a').on('click', function() {
+$('#messages').on('click', '.message .sound a', function() {
 	var sound = $(this).parent().find('audio');
 	if($(this).parent().hasClass('playing')) {
 		stopSounds();
@@ -242,4 +243,3 @@ function resetSounds() {
 	$('.message .sound').removeClass('playing');
 	$('.message .sound a').text('Play');
 }
-*/

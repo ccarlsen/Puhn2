@@ -64,9 +64,26 @@ var webmsSchema = mongoose.Schema({
   }
 });
 
+//Sound Collection Schema
+var soundsSchema = mongoose.Schema({
+  _creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
+  link: String,
+	title: String,
+  format: String,
+	type: String,
+  created: {
+    type: Date,
+    default: Date.now
+  }
+});
+
 var mongoMessage = mongoose.model('Message', chatMessageSchema);
 var mongoUser = mongoose.model('User', userSchema);
 var mongoWebm = mongoose.model('Webm', webmsSchema);
+var mongoSound = mongoose.model('Sound', soundsSchema);
 
 /**
  * Create New User
@@ -378,6 +395,57 @@ exports.deactivateWebmById = function (webmId, callback) {
 	  });
 	});
 }
+
+/**
+ * Create New Sound
+ * @method createNewSound
+ * @param {} creator
+ * @param {} link
+ * @param {} title
+ * @param {} format
+ * @param {} type
+ * @param {} callback
+ * @return
+ */
+exports.createNewSound = function (creator, link, title, format, type, callback) {
+    var newSound = new mongoSound({
+      _creator: creator,
+      link: link,
+  		title: title,
+  		format: format,
+  		type: type
+    });
+    //Save Webm
+    newSound.save(function (err, user) {
+        if (err) return handleError(err);
+        callback(true);
+    });
+}
+
+/**
+ * Get all Sounds
+ * @method getAllSounds
+ * @param {} callback
+ * @return
+ */
+exports.getAllSounds = function (callback) {
+    mongoSound.find({type: 1}).sort({created: 1}).exec(function(err, sounds){
+		if(err) return handleError(err);
+		callback(sounds)
+	});
+}
+
+//Deactivate sound by ID
+exports.deactivateSoundById = function (soundId, callback) {
+  mongoSound.findOne({ _id: soundId }, function (err, sound){
+	  sound.type = 0;
+	  sound.save(function (err) {
+        if (err) return handleError(err);
+		callback();
+	  });
+	});
+}
+
 /**
  * Error Handler
  * @method handleError

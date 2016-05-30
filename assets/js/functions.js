@@ -83,6 +83,38 @@ exports.deleteWebmById = function(id, callback) {
 	});
 }
 
+exports.loadSounds = function() {
+	$.get( config.http.url + '/sounds', function( sounds ) {
+		$('#sounds').html('');
+		sounds.forEach(function(sound) {
+			var format = 'audio/mpeg';
+			switch(sound.format){
+				case 'mp3':
+					format = 'audio/mpeg';
+					break;
+				case 'wav':
+					format = 'audio/wav';
+					break;
+				case 'ogg':
+					format = 'audio/ogg';
+					break;
+			}
+			var content = '<li id="' + sound._id + '">' + sound.title + '<audio data-title="' + sound.title + '"><source src="' + sound.link + '" type="' + format + '"></audio></li>';
+			$('#sounds').append(content);
+		});
+	});
+}
+
+exports.deleteSoundById = function(id, callback) {
+	$.ajax({
+    url: config.http.url + '/sounds/' + id,
+    type: 'DELETE',
+    success: function(result) {
+        callback();
+    }
+	});
+}
+
 exports.chatInputFocus = function() {
 	$('#send').focus();
 }
@@ -124,8 +156,8 @@ exports.getProcessedMessage = function(message) {
 	var gifRegex 	= /\/gif\s((https?):\/\/.*\.(?:gif|gifv|webm))(\s(w|h)(\d+))?/g;
 	var gifMatch 	= gifRegex.exec(content.message);
 
-	var soundRegex 	= /\/sound\s((https?):\/\/.*\.(?:mp3|ogg|wav))(\s(w|h)(\d+))?/g;
-	//var soundMatch 	= soundRegex.exec(content.message);
+	var soundRegex 	= /\/sound\s((https?):\/\/.*\.(?:mp3|ogg|wav))\s(.*)/g;
+	var soundMatch 	= soundRegex.exec(content.message);
 
 	if (imageTest) {
 		content.message = '<div class="image"><div class="inner"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div></div>';
@@ -135,6 +167,11 @@ exports.getProcessedMessage = function(message) {
 		content.resizemode = gifMatch[4];
 		content.size = gifMatch[5];
 		content.mode = 'GIFWEBM';
+	} else if (soundMatch != null) {
+		content.url = soundMatch[1];
+		content.protocol = soundMatch[2];
+		content.title = soundMatch[3];
+		content.mode = 'SOUND';
 	} else {
 		content.message = escapeHTML(content.message);
 		content.message = linkify(content.message);
