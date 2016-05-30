@@ -1,13 +1,10 @@
-var remote 		= require('electron').remote;
+const {remote} = require('electron');
+const {Menu, MenuItem, shell, app} = remote;
 var win 		= remote.getCurrentWindow();
 var io 			= require('socket.io-client');
 var config 		= require('./config.js');
 var functions 	= require('./functions.js');
-var shell 		= remote.shell;
-var app			= remote.app;
 
-var Menu 		= remote.require('menu');
-var MenuItem 	= remote.require('menu-item');
 
 // Connecting to socket with auth token
 var socket = io.connect(config.http.url, {
