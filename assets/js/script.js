@@ -137,7 +137,6 @@ $(document).on('ready', function() {
 	functions.chatInputFocus();
 	functions.loadEmoticons();
 	functions.loadWebms();
-	console.log('ready');
 });
 $('body').on('click', function() {
 	functions.chatInputFocus();
@@ -158,27 +157,29 @@ $('#smiley').on('mouseleave', function() {
 });
 
 // Webms
+var gifToDelete = null;
+var gifMenu = new Menu();
+var gifMenuItem = new MenuItem({
+	label: 'Delete',
+	click: () => {
+		alert('Please fucking delete - ' + gifToDelete);
+	}
+});
+
+gifMenu.append(gifMenuItem);
+
 $('#gifs').on('click', 'li', function() {
 	var webmHtml = '<video width="' + $(this).data('width') + '" height="' + $(this).data('height') + '" src="' + $(this).data('link') + '" class="webm" autoplay="" loop="" muted="muted"></video>';
 	socket.emit('sendMessage', webmHtml);
 });
 
-
-
-
-var gifMenu = new Menu();
-var gifMenuItem = new MenuItem({
-	label: 'Delete',
-	click: () => {
-		alert("delete dat shit!");
-	}
-});
-gifMenu.append(gifMenuItem);
-
-window.addEventListener('contextmenu', (event) => {
+$('#gifs').on('contextmenu', 'li', function(event) {
 	event.preventDefault();
 	gifMenu.popup(remote.getCurrentWindow());
-}, false);
+	gifToDelete = $(this).attr('id')
+});
+
+
 
 // SOUNDS
 /*
