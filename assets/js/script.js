@@ -6,6 +6,9 @@ var functions 	= require('./functions.js');
 var shell 		= remote.shell;
 var app			= remote.app;
 
+var Menu 		= remote.require('menu');
+var MenuItem 	= remote.require('menu-item');
+
 // Connecting to socket with auth token
 var socket = io.connect(config.http.url, {
 	query: 'token=' + win.token
@@ -137,6 +140,7 @@ $(document).on('ready', function() {
 	functions.chatInputFocus();
 	functions.loadEmoticons();
 	functions.loadWebms();
+	console.log('ready');
 });
 $('body').on('click', function() {
 	functions.chatInputFocus();
@@ -157,11 +161,27 @@ $('#smiley').on('mouseleave', function() {
 });
 
 // Webms
-
 $('#gifs').on('click', 'li', function() {
 	var webmHtml = '<video width="' + $(this).data('width') + '" height="' + $(this).data('height') + '" src="' + $(this).data('link') + '" class="webm" autoplay="" loop="" muted="muted"></video>';
 	socket.emit('sendMessage', webmHtml);
 });
+
+
+
+
+var gifMenu = new Menu();
+var gifMenuItem = new MenuItem({
+	label: 'Delete',
+	click: () => {
+		alert("delete dat shit!");
+	}
+});
+gifMenu.append(gifMenuItem);
+
+window.addEventListener('contextmenu', (event) => {
+	event.preventDefault();
+	gifMenu.popup(remote.getCurrentWindow());
+}, false);
 
 // SOUNDS
 /*

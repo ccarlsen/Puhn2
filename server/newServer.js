@@ -118,7 +118,7 @@ io.sockets.on('connection', function (socket) {
   //FFMPEG Installation:
   //install scripts/install_ffmpeg_ubuntu.sh
   socket.on('uploadGifWebm', function(content){
-    sendBotMessage("Adding new webm...");
+    sendBotMessage("Creating new GIF...");
     var fileUrl = content.url;
     var width = content.resizemode == 'w' ? content.size : '?';
     var height = content.resizemode == 'h' ? content.size : '?';
@@ -143,10 +143,10 @@ io.sockets.on('connection', function (socket) {
         }
 
         ffmpegcommand.on('error', function(err, stdout, stderr) {
-          sendBotMessage("Couldn't process '" + fileUrl + "' to Webm.");
+          sendBotMessage("Couldn't process '" + fileUrl + "' to GIF!");
           console.log('Cannot process video: ' + err.message);
         }).on('end', function() {
-          console.log('Processing finished.. taking thumbail!');
+          console.log('Processing finished...taking thumbail!');
           //When webm created, create thumbail
           ffmpeg(dest)
           .addOptions(['-vframes 1'])
@@ -164,7 +164,7 @@ io.sockets.on('connection', function (socket) {
                 metadata.streams[0].width,
                 function(saved) {
                   if(saved){
-                    sendBotMessage("Finished");
+                    sendBotMessage("Done!");
                     io.sockets.emit('loadWebms');
                   }
                 });
@@ -174,7 +174,7 @@ io.sockets.on('connection', function (socket) {
         })
         .run();
       } else {
-        sendBotMessage("Couldn't download the file");
+        sendBotMessage("Couldn't download the file!");
       }
     });
   });
@@ -191,7 +191,7 @@ io.sockets.on('connection', function (socket) {
 	});
 
   socket.on('error', function(error) {
-    sendBotMessage("Some error happend... you have to restart the chat :)");
+    sendBotMessage("Error!");
     console.log(error);
   });
 });
