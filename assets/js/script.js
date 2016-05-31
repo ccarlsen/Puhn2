@@ -102,11 +102,15 @@ socket.on('loadSounds', function(){
 	functions.loadSounds();
 });
 
-socket.on('receiveSound', function(id){
+socket.on('receiveSound', function(id) {
+	stopSounds();
 	var sound = $('#' + id).find('audio');
 	sound[0].play();
 	sound[0].addEventListener('ended', resetSounds);
 	$('#' + id).addClass('playing');
+	setTimeout(function() {
+		$('.sound a[data-id="'+ id +'"]').last().text('Stop');
+	}, 100);
 });
 
 // Submitting a message
@@ -211,7 +215,6 @@ $('#gifs').on('mouseleave', 'li', function() {
 
 
 // SOUNDS
-
 $('#sounds').on('click', 'li', function() {
 	var sound = $(this).find('audio');
 	if($(this).hasClass('playing')) {
@@ -225,24 +228,22 @@ $('#sounds').on('click', 'li', function() {
 });
 
 $('#sounds').on('dblclick', 'li', function() {
-	stopSounds();
 	var id = $(this).attr('id');
-  var title = $(this).parent().find('audio').data('title');
-  var content = '<div class="sound"><span>' + title + '</span><a href="#" data-id="' + id + '">Play</a></div>';
+	var title = $(this).find('audio').data('title');
+	var content = '<div class="sound"><span>' + title + '</span><a href="#" data-id="' + id + '">Play</a></div>';
 	socket.emit('sendSound', id);
 	socket.emit('sendMessage', content);
 });
 
 $('#messages').on('click', '.message .sound a', function() {
 	var soundId = $(this).data('id');
-	alert(soundId);
-	var sound = $('#' + soundId);
-	if($(this).parent().hasClass('playing')) {
+	var sound = $('#' + soundId).find('audio');
+	if($('#' + soundId).hasClass('playing')) {
 		stopSounds();
 		$(this).text('Play');
 	} else {
 		stopSounds();
-		$(this).parent().addClass('playing');
+		$('#' + soundId).addClass('playing');
 		sound[0].play();
 		$(this).text('Stop');
 	}
@@ -251,8 +252,7 @@ $('#messages').on('click', '.message .sound a', function() {
 
 function stopSounds() {
 	$('#sounds li').removeClass('playing');
-	$('.message .sound').removeClass('playing');
-	$('.message .sound a').text('Play');
+	$('.sound a').text('Play');
 	$('audio').each(function(){
 		this.pause();
 		this.currentTime = 0;
@@ -261,6 +261,5 @@ function stopSounds() {
 
 function resetSounds() {
 	$('#sounds li').removeClass('playing');
-	$('.message .sound').removeClass('playing');
-	$('.message .sound a').text('Play');
+	$('.sound a').text('Play');
 }
