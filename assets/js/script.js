@@ -105,6 +105,7 @@ socket.on('loadSounds', function(){
 socket.on('receiveSound', function(id){
 	var sound = $('#' + id).find('audio');
 	sound[0].play();
+	sound[0].addEventListener('ended', resetSounds);
 	$('#' + id).addClass('playing');
 });
 
@@ -226,11 +227,16 @@ $('#sounds').on('click', 'li', function() {
 $('#sounds').on('dblclick', 'li', function() {
 	stopSounds();
 	var id = $(this).attr('id');
+  var title = $(this).parent().find('audio').data('title');
+  var content = '<div class="sound"><span>' + title + '</span><a href="#" data-id="' + id + '">Play</a></div>';
 	socket.emit('sendSound', id);
+	socket.emit('sendMessage', content);
 });
 
 $('#messages').on('click', '.message .sound a', function() {
-	var sound = $(this).parent().find('audio');
+	var soundId = $(this).data('id');
+	alert(soundId);
+	var sound = $('#' + soundId);
 	if($(this).parent().hasClass('playing')) {
 		stopSounds();
 		$(this).text('Play');
