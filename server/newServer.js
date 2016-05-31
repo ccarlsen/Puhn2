@@ -140,6 +140,10 @@ io.sockets.on('connection', function (socket) {
     io.sockets.emit('loadWebms');
   });
 
+  socket.on('updateSounds', function(){
+    io.sockets.emit('loadSounds');
+  });
+
   socket.on('sendSound', function(id){
     io.sockets.emit('receiveSound', id);
   });
