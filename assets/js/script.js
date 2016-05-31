@@ -187,12 +187,24 @@ gifMenu.append(gifMenuItem);
 $('#gifs').on('click', 'li', function() {
 	var webmHtml = '<video width="' + $(this).data('width') + '" height="' + $(this).data('height') + '" src="' + $(this).data('link') + '" class="webm" autoplay="" loop="" muted="muted"></video>';
 	socket.emit('sendMessage', webmHtml);
+	$('#preview').html('');
+	$('#preview').hide();
 });
 
 $('#gifs').on('contextmenu', 'li', function(event) {
 	event.preventDefault();
 	gifMenu.popup(remote.getCurrentWindow());
 	gifToDelete = $(this).attr('id')
+});
+
+$('#gifs').on('mouseover', 'li', function() {
+	$('#preview').html('<video width="' + $(this).data('width') + '" height="' + $(this).data('height') + '" src="' + $(this).data('link') + '" class="webm" autoplay="" loop="" muted="muted"></video>');
+	$('#preview').show();
+});
+
+$('#gifs').on('mouseleave', 'li', function() {
+	$('#preview').html('');
+	$('#preview').hide();
 });
 
 
