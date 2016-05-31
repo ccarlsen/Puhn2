@@ -215,6 +215,19 @@ $('#gifs').on('mouseleave', 'li', function() {
 
 
 // SOUNDS
+var soundToDelete = null;
+var soundMenu = new Menu();
+var soundMenuItem = new MenuItem({
+	label: 'Delete',
+	click: () => {
+		functions.deleteSoundById(soundToDelete, function(){
+			socket.emit('updateSounds');
+		});
+	}
+});
+
+soundMenu.append(soundMenuItem);
+
 $('#sounds').on('click', 'li', function() {
 	var sound = $(this).find('audio');
 	if($(this).hasClass('playing')) {
@@ -233,6 +246,12 @@ $('#sounds').on('dblclick', 'li', function() {
 	var content = '<div class="sound"><span>' + title + '</span><a href="#" data-id="' + id + '">Play</a></div>';
 	socket.emit('sendSound', id);
 	socket.emit('sendMessage', content);
+});
+
+$('#sounds').on('contextmenu', 'li', function(event) {
+	event.preventDefault();
+	soundMenu.popup(remote.getCurrentWindow());
+	soundToDelete = $(this).attr('id')
 });
 
 $('#messages').on('click', '.message .sound a', function() {
