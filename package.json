@@ -4,8 +4,8 @@
   "main": "main.js",
   "scripts": {
     "start": "electron main.js",
-    "buildWin": "electron-packager . Wayne --platform=win32 --arch=x64 --overwrite --icon=assets/img/app.ico",
-    "buildOsx": "electron-packager . Wayne --platform=darwin --arch=x64 --overwrite --icon=assets/img/app.icns"
+    "buildWin": "electron-packager . Wayne --out=dist/win --platform=win32 --arch=x64 --overwrite --icon=assets/img/app.ico --ignore=dist --ignore=server --ignore=.gitignore --ignore=README.md --ignore=gulpfile.js",
+    "buildOsx": "electron-packager . Wayne --out=dist/osx --platform=darwin --arch=x64 --overwrite --icon=assets/img/app.icns --ignore=dist --ignore=server --ignore=.gitignore --ignore=README.md --ignore=gulpfile.js"
   },
   "dependencies": {
     "socket.io-client": "^1.4.6"
