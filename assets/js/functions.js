@@ -1,5 +1,5 @@
-var emoticons = require('./emoticons.js');
-var config	= require('./config.js');
+var emoticons 	= require('./emoticons.js');
+var config		= require('./config.js');
 
 function escapeHTML(string) {
 	return String(string)
@@ -128,7 +128,7 @@ exports.scrollToBottom = function() {
 }
 
 exports.showNotification = function(content) {
-	var notification = new Notification('Puhn2', {
+	var notification = new Notification('Wayne', {
 		body: content,
 		silent: true
 	});

@@ -1,9 +1,10 @@
 #side {
 	width: 340px;
 	height: 100%;
-	background: $grey;
+	background: $grey + 10;
 	position: absolute;
 	top: 0; left: 0;
+	z-index: 2;
 	#gifs, #sounds {
 		width: calc(100% - 40px);
 		overflow-x: hidden;
@@ -12,11 +13,11 @@
 			width: 10px;
 		}
 		&::-webkit-scrollbar-track {
-			background: $grey - 15;
+			background: $grey - 5;
 			border-radius: 10px;
 		}
 		&::-webkit-scrollbar-thumb {
-			background: $grey - 30;
+			background: $grey - 15;
 			border-radius: 10px;
 		}
 	}
@@ -51,11 +52,9 @@
 		bottom: 20px; left: 20px;
 		li {
 			width: calc(100% - 20px);
-			background: $grey + 10;
 			font-size: 12px;
 			font-weight: 500;
 			padding: 6px 8px;
-			margin-bottom: 5px;
 			border-radius: 5px;
 			cursor: pointer;
 			text-overflow: ellipsis;

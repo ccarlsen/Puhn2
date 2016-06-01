@@ -1,4 +1,5 @@
 /node_modules/
 server/node_modules/
 server/config/config.js
-/Puhn2*
+/Wayne*
+server/config.js
