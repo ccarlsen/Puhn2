@@ -14,7 +14,7 @@ app.on('ready', function() {
 	ipcMain.on('logging-in', (event, arg) => {
 		var screenWidth = electron.screen.getPrimaryDisplay().workAreaSize.width;
 		var screenHeight = electron.screen.getPrimaryDisplay().workAreaSize.height;
-		
+
 		if (process.platform == 'darwin') {
 			mainWindow = new BrowserWindow({width: screenWidth, height: screenHeight, frame: false});
 		} else {
@@ -27,6 +27,10 @@ app.on('ready', function() {
 		mainWindow.loadURL(`file://${__dirname}/index.html`);
 		loginWindow.close();
 		//mainWindow.webContents.openDevTools();
-		
+
 	});
+});
+
+app.on('window-all-closed', function() {
+  app.quit();
 });
