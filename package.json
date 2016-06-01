@@ -11,12 +11,12 @@
     "socket.io-client": "^1.4.6"
   },
   "devDependencies": {
-    "electron-packager": "^7.0.1",
-    "gulp-minify-css": "^0.3.8",
-    "gulp-plumber": "^0.6.6",
+    "electron-packager": "^7.0.3",
+    "gulp-minify-css": "^0.3.13",
+    "gulp-plumber": "^1.1.0",
     "gulp-sass": "^2.1.0",
     "gulp-util": "^3.0.1",
-	"electron-prebuilt": "^1.1.0",
+	"electron-prebuilt": "^1.2.1",
     "gulp": "^3.8.10"
   }
 }
