@@ -5,7 +5,6 @@ var io 			= require('socket.io-client');
 var config 		= require('./config.js');
 var functions 	= require('./functions.js');
 
-
 // Connecting to socket with auth token
 var socket = io.connect(config.http.url, {
 	query: 'token=' + win.token
@@ -35,7 +34,6 @@ socket.on('newMessage', function(content) {
 		message = '<div class="message" data-user="' + content.user.usr + '"><div class="avatar"><img src="' + content.user.avatar + '"></div><div class="content">'+ content.msg +'<time datetime="' + date.toISOString() + '"></time></div>'
 		$('#messages').append(message);
 	}
-
 	if(!win.isFocused()) {
 		functions.playSound('message');
 		win.flashFrame(true);
@@ -43,10 +41,8 @@ socket.on('newMessage', function(content) {
 			app.dock.bounce('critical');
 		}
 	}
-
 	functions.scrollToBottom();
 	functions.timeAgo();
-
 });
 
 // When a user comes online
@@ -86,6 +82,7 @@ socket.on('userStatusUpdate', function(userlist) {
 	functions.timeAgo();
 });
 
+// When a user is typing
 socket.on('typing', function(data){
 	if (data.isTyping) {
 		$('#typing').html('<strong>' + data.user + '</strong> is typing');
@@ -93,15 +90,28 @@ socket.on('typing', function(data){
 		$('#typing').html('');
 	}
 });
+$('#send').on('input', function() {
+	if ($(this).val() == '') {
+		socket.emit('stopTyping');
+	}
+	else {
+		socket.emit('startTyping');
+	}
+});
 
+$('#send').focusout(function() {
+	socket.emit('stopTyping');
+});
+
+// Load gifs and sounds
 socket.on('loadWebms', function(){
 	functions.loadWebms();
 });
-
 socket.on('loadSounds', function(){
 	functions.loadSounds();
 });
 
+// When sound is received
 socket.on('receiveSound', function(id) {
 	stopSounds();
 	var sound = $('#' + id).find('audio');
@@ -131,23 +141,11 @@ $('#send').on('keypress', function(event) {
 					break;
 				default:
 					socket.emit('sendMessage', content.message);
+					functions.chatInputFocus();
 			}
 			socket.emit('stopTyping');
 		}
 	}
-});
-
-$('#send').on('input', function() {
-	if ($(this).val() == '') {
-		socket.emit('stopTyping');
-	}
-	else {
-		socket.emit('startTyping');
-	}
-});
-
-$('#send').focusout(function() {
-	socket.emit('stopTyping');
 });
 
 // Focus on input when ready and when clicking anywhere
@@ -157,8 +155,17 @@ $(document).on('ready', function() {
 	functions.loadWebms();
 	functions.loadSounds();
 });
-$('body').on('click', function() {
-	functions.chatInputFocus();
+
+// Add shadow if not scrolled to bottom
+$('#chat').on('scroll', function() {
+	var scrollTop = $(this).scrollTop();
+	var innerHeight = $(this).innerHeight();
+	var scrollHeight = $(this)[0].scrollHeight;
+	if (scrollTop + innerHeight >= scrollHeight - 5) {
+		$('#message').removeClass('not-bottom');
+	} else {
+		$('#message').addClass('not-bottom');
+	}
 });
 
 // Open links in default browser
@@ -175,7 +182,7 @@ $('#smiley').on('mouseleave', function() {
 	$('#emoticons').hide();
 });
 
-// Webms
+// GIFS
 var gifToDelete = null;
 var gifMenu = new Menu();
 var gifMenuItem = new MenuItem({
@@ -184,6 +191,7 @@ var gifMenuItem = new MenuItem({
 		functions.deleteWebmById(gifToDelete, function(){
 			socket.emit('updateWebms');
 		});
+		functions.chatInputFocus();
 	}
 });
 
@@ -194,6 +202,7 @@ $('#gifs').on('click', 'li', function() {
 	socket.emit('sendMessage', webmHtml);
 	$('#preview').html('');
 	$('#preview').hide();
+	functions.chatInputFocus();
 });
 
 $('#gifs').on('contextmenu', 'li', function(event) {
@@ -212,8 +221,6 @@ $('#gifs').on('mouseleave', 'li', function() {
 	$('#preview').hide();
 });
 
-
-
 // SOUNDS
 var soundToDelete = null;
 var soundMenu = new Menu();
@@ -223,6 +230,7 @@ var soundMenuItem = new MenuItem({
 		functions.deleteSoundById(soundToDelete, function(){
 			socket.emit('updateSounds');
 		});
+		functions.chatInputFocus();
 	}
 });
 
@@ -238,6 +246,7 @@ $('#sounds').on('click', 'li', function() {
 		sound[0].play();
 	}
 	sound[0].addEventListener('ended', resetSounds);
+	functions.chatInputFocus();
 });
 
 $('#sounds').on('dblclick', 'li', function() {
@@ -246,6 +255,7 @@ $('#sounds').on('dblclick', 'li', function() {
 	var content = '<div class="sound"><span>' + title + '</span><a href="#" data-id="' + id + '">Play</a></div>';
 	socket.emit('sendSound', id);
 	socket.emit('sendMessage', content);
+	functions.chatInputFocus();
 });
 
 $('#sounds').on('contextmenu', 'li', function(event) {
@@ -267,6 +277,7 @@ $('#messages').on('click', '.message .sound a', function() {
 		$(this).text('Stop');
 	}
 	sound[0].addEventListener('ended', resetSounds);
+	functions.chatInputFocus();
 });
 
 function stopSounds() {
