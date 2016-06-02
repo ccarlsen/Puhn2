@@ -1,4 +1,4 @@
-const ipcRenderer	= require('electron').ipcRenderer;
+const {ipcRenderer}	= require('electron');
 var io				= require('socket.io-client');
 var config			= require('./config.js');
 

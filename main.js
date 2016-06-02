@@ -6,8 +6,7 @@ let mainWindow;
 
 app.on('ready', function() {
 
-	loginWindow = new BrowserWindow({width: 300, height: 340, frame: false});
-	loginWindow.loadURL(`file://${__dirname}/login.html`);
+	openLoginWindow();
 
 	ipcMain.on('logging-in', (event, arg) => {
 		var screenWidth = electron.screen.getPrimaryDisplay().workAreaSize.width;
@@ -46,10 +45,20 @@ app.on('ready', function() {
     ];
 
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
-
 	});
+
+	ipcMain.on('disconnected', (event, arg) => {
+		mainWindow.close();
+		openLoginWindow();
+	});
+
 });
 
 app.on('window-all-closed', function() {
   app.quit();
 });
+
+var openLoginWindow = function () {
+	loginWindow = new BrowserWindow({width: 300, height: 340, frame: false});
+	loginWindow.loadURL(`file://${__dirname}/login.html`);
+}

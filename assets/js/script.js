@@ -1,4 +1,4 @@
-const {remote} = require('electron');
+const {remote, ipcRenderer} = require('electron');
 const {Menu, MenuItem, shell, app} = remote;
 var win 		= remote.getCurrentWindow();
 var io 			= require('socket.io-client');
@@ -16,9 +16,11 @@ socket.on('connect', function () {
 	socket.emit('getOldMessages');
 }).on('disconnect', function () {
 	console.log('disconnected');
+	ipcRenderer.send('disconnected');
 }).on("error", function(error) {
 	if (error.type == "UnauthorizedError" || error.code == "invalid_token") {
 		console.log('Unauthorized');
+		ipcRenderer.send('disconnected');
 	}
 });
 
