@@ -158,6 +158,9 @@ exports.getProcessedMessage = function(message) {
 
 	var soundRegex 	= /\/sound\s((https?):\/\/.*\.(?:mp3|ogg|wav))\s(.*)/g;
 	var soundMatch 	= soundRegex.exec(content.message);
+	
+	var avatarRegex 	= /\/avatar\s((https?):\/\/.*\.(?:jpg|png))/g;
+	var avatarMatch 	= avatarRegex.exec(content.message);
 
 	if (imageTest) {
 		content.message = '<div class="image"><div class="inner"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div></div>';
@@ -172,6 +175,10 @@ exports.getProcessedMessage = function(message) {
 		content.protocol = soundMatch[2];
 		content.title = soundMatch[3];
 		content.mode = 'SOUND';
+	} else if (avatarMatch != null) {
+		content.url = avatarMatch[1];
+		content.protocol = avatarMatch[2];
+		content.mode = 'AVATAR';
 	} else {
 		content.message = escapeHTML(content.message);
 		content.message = linkify(content.message);

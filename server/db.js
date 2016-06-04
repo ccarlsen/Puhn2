@@ -254,6 +254,16 @@ exports.updateUserStatus = function (username, status, signedDate, callback) {
 	});
 }
 
+exports.updateUserAvatar = function (userId, avatar, callback) {
+	mongoUser.findOne({ _id: userId }, function (err, user){
+		user.avatar = avatar;
+		user.save(function (err) {
+			if (err) return handleError(err);
+			callback();
+		});
+	});
+}
+
 /**
  * get all user
  * @method getFullUserByUsername

@@ -141,6 +141,9 @@ $('#send').on('keypress', function(event) {
 				case 'SOUND':
 					socket.emit('uploadSound', content);
 					break;
+				case 'AVATAR':
+					socket.emit('updateAvatar', content);
+					break;
 				default:
 					socket.emit('sendMessage', content.message);
 					functions.chatInputFocus();

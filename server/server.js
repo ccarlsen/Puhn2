@@ -10,6 +10,7 @@ var https = require('spdy');
 var http = require('http');
 var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
+var gm = require('gm');
 //Chat Variables
 var users = {};
 var sockets = [];
@@ -230,6 +231,33 @@ io.sockets.on('connection', function (socket) {
               io.sockets.emit('loadSounds');
             }
           });
+      } else {
+        sendBotMessage("Couldn't download the file!");
+      }
+    });
+  });
+  
+  //Update Avatar with resize to 100x100
+  socket.on('updateAvatar', function(content){
+    var fileUrl = content.url;
+    var format = fileUrl.substr((~-fileUrl.lastIndexOf(".") >>> 0) + 2);
+    var timestamp = new Date().getTime();
+    var filename = timestamp + '.' + format;
+	var dest = './temp/temp.' + format;
+    var output = config.http.avatarfolder + filename;
+    download(fileUrl, dest, content.protocol, function(downloaded){
+      if(downloaded) {
+		  gm(dest).resize(100, 100).write(output, function (err) {
+			if (err) {
+				sendBotMessage("Failed creating new avatar for " + users[socket.id].firstname  + "...");
+			} else {
+				var avatarLink = config.http.domain + '/avatars/' + filename;
+				mongo.updateUserAvatar(users[socket.id]._id, avatarLink, function(saved) {
+					users[socket.id].avatar = avatarLink;
+					sendBotMessage(users[socket.id].firstname + " has a new avatar!");
+				});
+			}
+		});   
       } else {
         sendBotMessage("Couldn't download the file!");
       }
