@@ -67,7 +67,7 @@ exports.loadWebms = function() {
 	$.get( config.http.url + '/webms', function( webms ) {
 		$('#gifs').html('');
 		webms.forEach(function(webm) {
-			var content = '<li id="' + webm._id + '" data-link="' + webm.link + '" data-width="' + webm.width + '" data-height="' + webm.height + '"><img src="' + webm.thumblink + '"></li>';
+			var content = '<li id="' + webm._id + '" data-link="' + webm.domain + webm.link + '" data-width="' + webm.width + '" data-height="' + webm.height + '"><img src="' + webm.domain + webm.thumblink + '"></li>';
 			$('#gifs').append(content);
 		});
 	});
@@ -99,7 +99,7 @@ exports.loadSounds = function() {
 					format = 'audio/ogg';
 					break;
 			}
-			var content = '<li id="' + sound._id + '">' + sound.title + '<audio data-title="' + sound.title + '"><source src="' + sound.link + '" type="' + format + '"></audio></li>';
+			var content = '<li id="' + sound._id + '">' + sound.title + '<audio data-title="' + sound.title + '"><source src="' + sound.domain + sound.link + '" type="' + format + '"></audio></li>';
 			$('#sounds').append(content);
 		});
 	});

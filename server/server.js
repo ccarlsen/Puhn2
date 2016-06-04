@@ -190,8 +190,9 @@ io.sockets.on('connection', function (socket) {
             //When thumbnail created, save to database
             ffmpeg.ffprobe(outputWebm, function(err, metadata) {
               mongo.createNewWebm(users[socket.id]._id,
-                config.http.domain + '/webm/' + timestamp + '.webm',
-                config.http.domain + '/thumbnails/' + timestamp + '.png',
+                '/webm/' + timestamp + '.webm',
+                '/thumbnails/' + timestamp + '.png',
+				config.http.domain,
                 '',
                 1,
                 metadata.streams[0].height,
@@ -223,7 +224,7 @@ io.sockets.on('connection', function (socket) {
     var dest = config.http.soundsfolder + filename;
     download(fileUrl, dest, content.protocol, function(downloaded){
       if(downloaded) {
-        mongo.createNewSound(users[socket.id]._id, config.http.domain + '/sounds/' + filename, content.title, format, 1, function(saved) {
+        mongo.createNewSound(users[socket.id]._id, '/sounds/' + filename, config.http.domain, content.title, format, 1, function(saved) {
             if(saved){
               sendBotMessage("Done!");
               io.sockets.emit('loadSounds');

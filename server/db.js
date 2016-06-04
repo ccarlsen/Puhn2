@@ -20,11 +20,11 @@ var userSchema = mongoose.Schema({
   lastname: String,
   avatar: String,
   status: String,
-	onMobile: String,
-	onPc: String,
-	signedDate: {
-    type: Date,
-    default: Date.now
+  onMobile: String,
+  onPc: String,
+  signedDate: {
+  type: Date,
+  default: Date.now
   },
   created: {
     type: Date,
@@ -52,12 +52,13 @@ var webmsSchema = mongoose.Schema({
     ref: 'User'
   },
   link: String,
-	thumblink: String,
+  thumblink: String,
+  domain: String,
   shortcut: String,
-	type: String,
-	height: String,
-	width: String,
-	order: Number,
+  type: String,
+  height: String,
+  width: String,
+  order: Number,
   created: {
     type: Date,
     default: Date.now
@@ -71,9 +72,10 @@ var soundsSchema = mongoose.Schema({
     ref: 'User'
   },
   link: String,
-	title: String,
+  domain: String,
+  title: String,
   format: String,
-	type: String,
+  type: String,
   created: {
     type: Date,
     default: Date.now
@@ -312,12 +314,13 @@ exports.getLastMessages = function (limit, callback) {
  * @param {} callback
  * @return
  */
-exports.createNewWebm = function (creator, link, thumblink, shortcut, type, height, width, callback) {
+exports.createNewWebm = function (creator, link, thumblink, domain, shortcut, type, height, width, callback) {
     var newWebm = new mongoWebm({
       _creator: creator,
       link: link,
   		thumblink: thumblink,
   		shortcut: shortcut,
+		domain: domain,
   		type: type,
   		height: height,
   		width: width
@@ -407,10 +410,11 @@ exports.deactivateWebmById = function (webmId, callback) {
  * @param {} callback
  * @return
  */
-exports.createNewSound = function (creator, link, title, format, type, callback) {
+exports.createNewSound = function (creator, link, domain, title, format, type, callback) {
     var newSound = new mongoSound({
-      _creator: creator,
-      link: link,
+        _creator: creator,
+        link: link,
+	    domain: domain,
   		title: title,
   		format: format,
   		type: type
