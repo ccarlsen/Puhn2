@@ -339,7 +339,7 @@ exports.createNewWebm = function (creator, link, thumblink, domain, shortcut, ty
  * @return
  */
 exports.getAllWebms = function (callback) {
-    mongoWebm.find({type: 1}).sort({created: 1}).exec(function(err, webms){
+    mongoWebm.find({type: 1}).sort({'created': -1}).exec(function(err, webms){
 		if(err) return handleError(err);
 		callback(webms)
 	});
@@ -433,7 +433,7 @@ exports.createNewSound = function (creator, link, domain, title, format, type, c
  * @return
  */
 exports.getAllSounds = function (callback) {
-    mongoSound.find({type: 1}).sort({created: 1}).exec(function(err, sounds){
+    mongoSound.find({type: 1}).sort({'created': -1}).exec(function(err, sounds){
 		if(err) return handleError(err);
 		callback(sounds)
 	});
