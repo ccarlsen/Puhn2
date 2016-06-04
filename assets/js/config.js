@@ -1,4 +1,4 @@
 var config 		= {};
 config.http 	= {};
-config.http.url	= 'https://puhn.co:8082';
+config.http.url	= 'https://wayne.puhn.co';
 module.exports 	= config;
