@@ -8,6 +8,7 @@
     "buildOsx": "electron-packager . Wayne --out=dist/osx --platform=darwin --arch=x64 --overwrite --icon=assets/img/app.icns --ignore=dist --ignore=server --ignore=.gitignore --ignore=README.md --ignore=gulpfile.js"
   },
   "dependencies": {
+    "request": "^2.72.0",
     "socket.io-client": "^1.4.6"
   },
   "devDependencies": {
@@ -16,7 +17,7 @@
     "gulp-plumber": "^1.1.0",
     "gulp-sass": "^2.1.0",
     "gulp-util": "^3.0.1",
-	"electron-prebuilt": "^1.2.1",
+    "electron-prebuilt": "^1.2.1",
     "gulp": "^3.8.10"
   }
 }

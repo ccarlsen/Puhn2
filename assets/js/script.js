@@ -1,5 +1,5 @@
 const {remote, ipcRenderer} = require('electron');
-const {Menu, MenuItem, shell, app} = remote;
+const {Menu, MenuItem, shell, app, dialog, clipboard} = remote;
 var win 		= remote.getCurrentWindow();
 var io 			= require('socket.io-client');
 var config 		= require('./config.js');
@@ -143,6 +143,12 @@ $('#send').on('keypress', function(event) {
 					break;
 				case 'AVATAR':
 					socket.emit('updateAvatar', content);
+					break;
+				case 'UPLOAD':
+					functions.uploadFile(dialog, function(fileurl) {
+						clipboard.writeText(fileurl);
+						alert('Link has been saved to clipboard!');
+					});
 					break;
 				default:
 					socket.emit('sendMessage', content.message);

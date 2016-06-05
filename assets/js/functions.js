@@ -1,5 +1,7 @@
 var emoticons 	= require('./emoticons.js');
 var config		= require('./config.js');
+var fs		= require('fs');
+var request = require('request');
 
 function escapeHTML(string) {
 	return String(string)
@@ -144,6 +146,23 @@ exports.playSound = function(content) {
 	sound.play();
 }
 
+exports.uploadFile = function(dialog, callback) {
+	dialog.showOpenDialog(function (fileNames) {
+		if (fileNames === undefined) return;
+	  var fileName = fileNames[0];
+		console.log(fileName);
+		var formData = {
+		  file: fs.createReadStream(fileName)
+		};
+		request.post({url:config.http.url + '/upload', formData: formData}, function optionalCallback(err, httpResponse, body) {
+		  if (err) {
+		    return console.error('upload failed:', err);
+		  }
+			callback(body);
+		});
+  });
+}
+
 exports.getProcessedMessage = function(message) {
 	var content = {};
 	content.message = message;
@@ -158,12 +177,17 @@ exports.getProcessedMessage = function(message) {
 
 	var soundRegex 	= /\/sound\s((https?):\/\/.*\.(?:mp3|ogg|wav))\s(.*)/g;
 	var soundMatch 	= soundRegex.exec(content.message);
-	
+
 	var avatarRegex 	= /\/avatar\s((https?):\/\/.*\.(?:jpg|png))/g;
 	var avatarMatch 	= avatarRegex.exec(content.message);
 
+	var uploadRegex 	= /(\/upload)/g;
+	var uploadTest 	= uploadRegex.test(content.message);
+
 	if (imageTest) {
 		content.message = '<div class="image"><div class="inner"><img src="'+ imageURL +'"><span><a href="'+ imageURL +'">'+ imageURL +'</a></span></div></div>';
+	} else if(uploadTest) {
+		content.mode = 'UPLOAD';
 	} else if (gifMatch != null) {
 		content.url = gifMatch[1];
 		content.protocol = gifMatch[2];

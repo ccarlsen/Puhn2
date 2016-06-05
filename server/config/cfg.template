@@ -15,6 +15,7 @@ config.http.domain = 'https://domain.com:' + config.http.port;
 config.http.webmfolder = './public/webm/';
 config.http.soundsfolder = './public/sounds/';
 config.http.thumbfolder = './public/thumbnails/';
+config.http.uploadfolder = './public/uploads/';
 
 config.crypto.jwtSecret = 'secret';
 

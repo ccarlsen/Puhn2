@@ -11,6 +11,18 @@ var http = require('http');
 var fs = require('fs');
 var ffmpeg = require('fluent-ffmpeg');
 var gm = require('gm');
+
+var multer  = require('multer');
+var storageProperties = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, config.http.uploadfolder)
+    },
+    filename: function (req, file, callback) {
+        callback(null, Date.now() + '_' + file.originalname )
+    }
+});
+var upload = multer({storage: storageProperties}).single('file');
+
 //Chat Variables
 var users = {};
 var sockets = [];
@@ -62,6 +74,15 @@ app.delete('/sounds/:id', function (req, res) {
 	mongo.deactivateSoundById(req.params.id, function() {
     res.send(req.body);
 	});
+});
+
+app.post('/upload',function(req,res){
+    upload(req,res,function(err) {
+        if(err) {
+            return res.end("error");
+        }
+        res.status(201).end(config.http.domain + '/uploads/'+ req.file.filename);
+    });
 });
 
 //letsencrypt https config
@@ -236,7 +257,7 @@ io.sockets.on('connection', function (socket) {
       }
     });
   });
-  
+
   //Update Avatar with resize to 100x100
   socket.on('updateAvatar', function(content){
     var fileUrl = content.url;
@@ -257,7 +278,7 @@ io.sockets.on('connection', function (socket) {
 					sendBotMessage(users[socket.id].firstname + " has a new avatar!");
 				});
 			}
-		});   
+		});
       } else {
         sendBotMessage("Couldn't download the file!");
       }
