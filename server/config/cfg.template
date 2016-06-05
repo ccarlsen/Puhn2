@@ -5,8 +5,10 @@ config.crypto = {};
 
 config.mongodb.host = 'localhost';
 config.mongodb.port = '27017';
+config.mongodb.user = 'username';
+config.mongodb.pwd = 'password';
 config.mongodb.collection = 'collection';
-config.mongodb.uri = 'mongodb://' + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.collection;
+config.mongodb.uri = 'mongodb://' + config.mongodb.user + ':' + config.mongodb.pwd + '@' + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.collection;
 
 config.http.port = '8080';
 config.http.domain = 'https://domain.com:' + config.http.port;
