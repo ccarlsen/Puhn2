@@ -1,7 +1,8 @@
 var emoticons 	= require('./emoticons.js');
 var config		= require('./config.js');
 var fs		= require('fs');
-var request = require('request');
+var FormData = require('form-data');
+var fetch = require('node-fetch');
 
 function escapeHTML(string) {
 	return String(string)
@@ -150,14 +151,12 @@ exports.uploadFile = function(dialog, callback) {
 	dialog.showOpenDialog(function (fileNames) {
 		if (fileNames === undefined) return;
 	  var fileName = fileNames[0];
-		console.log(fileName);
-		var formData = {
-		  file: fs.createReadStream(fileName)
-		};
-		request.post({url:config.http.url + '/upload', formData: formData}, function optionalCallback(err, httpResponse, body) {
-		  if (err) {
-		    return console.error('upload failed:', err);
-		  }
+		var fd = new FormData();
+		fd.append('file', fs.createReadStream(fileName));
+		fetch(config.http.url + '/upload', { method: 'POST', body: fd })
+		.then(function(res) {
+			return res.text();
+		}).then(function(body) {
 			callback(body);
 		});
   });
