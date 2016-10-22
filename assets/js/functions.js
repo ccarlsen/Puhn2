@@ -180,7 +180,7 @@ exports.getProcessedMessage = function(message) {
 	var avatarRegex 	= /\/avatar\s((https?):\/\/.*\.(?:jpg|png))/g;
 	var avatarMatch 	= avatarRegex.exec(content.message);
 
-	var uploadRegex 	= /(\/upload)/g;
+	var uploadRegex 	= /^(\/upload)/g;
 	var uploadTest 	= uploadRegex.test(content.message);
 
 	if (imageTest) {
