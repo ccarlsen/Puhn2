@@ -90,7 +90,7 @@ var lex = LEX.create({
   configDir: '/etc/letsencrypt',
   approveRegistration: function (hostname, cb) {
     cb(null, {
-      domains: ['puhn.co']
+      domains: ['thxma.de']
     , email: 'madetho@live.de'
     , agreeTos: true
     });
@@ -335,6 +335,6 @@ var download = function(url, dest, protocol, cb) {
 
 //Functions
 var sendBotMessage = function(message) {
-  var bot = {usr: 'Bot', avatar: 'https://puhn.co/avatars/bot.png'};
+  var bot = {usr: 'Bot', avatar: 'https://thxma.de/avatars/bot.png'};
   io.sockets.emit('newMessage', {msg: message, user: bot});
 };
