@@ -8,17 +8,17 @@
     "buildOsx": "electron-packager . Wayne --out=dist/osx --platform=darwin --arch=x64 --overwrite --icon=assets/img/app.icns --ignore=dist --ignore=server --ignore=.gitignore --ignore=README.md --ignore=gulpfile.js"
   },
   "dependencies": {
-    "form-data": "^0.2.0",
-    "node-fetch": "^1.5.3",
-    "socket.io-client": "^1.4.6"
+    "form-data": "^2.3.2",
+    "node-fetch": "^2.0.0",
+    "socket.io-client": "^2.0.4"
   },
   "devDependencies": {
-    "electron-packager": "^7.0.3",
+    "electron-packager": "^11.0.1",
+    "electron-prebuilt": "^1.4.13",
+    "gulp": "^3.8.10",
     "gulp-minify-css": "^0.3.13",
     "gulp-plumber": "^1.1.0",
     "gulp-sass": "^2.1.0",
-    "gulp-util": "^3.0.1",
-    "electron-prebuilt": "^1.2.1",
-    "gulp": "^3.8.10"
+    "gulp-util": "^3.0.1"
   }
 }
