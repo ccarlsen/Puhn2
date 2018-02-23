@@ -2,6 +2,8 @@ var config = {};
 config.mongodb = {};
 config.http = {};
 config.crypto = {};
+config.letsencrypt = {};
+config.debug = true;
 
 config.mongodb.host = 'localhost';
 config.mongodb.port = '27017';
@@ -11,11 +13,15 @@ config.mongodb.collection = 'collection';
 config.mongodb.uri = 'mongodb://' + config.mongodb.user + ':' + config.mongodb.pwd + '@' + config.mongodb.host + ':' + config.mongodb.port + '/' + config.mongodb.collection;
 
 config.http.port = '8080';
-config.http.domain = 'https://domain.com:' + config.http.port;
+config.http.domain = 'https://domain.com:';
 config.http.webmfolder = './public/webm/';
 config.http.soundsfolder = './public/sounds/';
 config.http.thumbfolder = './public/thumbnails/';
 config.http.uploadfolder = './public/uploads/';
+
+config.letsencrypt.server = 'staging';
+config.letsencrypt.configdir = '/etc/letsencrypt';
+config.letsencrypt.mail = 'john.doe@internet.xom';
 
 config.crypto.jwtSecret = 'secret';
 

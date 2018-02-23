@@ -200,7 +200,6 @@ exports.getFullUserByUsername = function (username, callback) {
  * @return
  */
 exports.userAuthenticate = function (username, password, callback) {
-    console.log(username);
     mongoUser.findOne({
         usr: username
     })

@@ -37,7 +37,7 @@ app.post('/login', function (req, res) {
   mongo.userAuthenticate(req.body.username, req.body.password, function (isValid) {
     if(isValid){
       mongo.getFullUserByUsername(req.body.username, function (user) {
-        var token = jwt.sign(user, config.crypto.jwtSecret, { expiresIn: "10h" });
+        var token = jwt.sign(user.toJSON() , config.crypto.jwtSecret, { expiresIn: "10h" });
         res.json({token: token});
       });
     } else {
@@ -87,20 +87,27 @@ app.post('/upload',function(req,res){
 
 //letsencrypt https config
 var lex = LEX.create({
-  configDir: '/etc/letsencrypt',
-  approveRegistration: function (hostname, cb) {
-    cb(null, {
-      domains: ['thxma.de']
-    , email: 'madetho@live.de'
-    , agreeTos: true
-    });
+  server: config.letsencrypt.server,
+  configDir: config.letsencrypt.configdir,
+  approvedDomains: function (opts, certs, cb) {
+    opts.domains = certs && certs.altnames || opts.domains;
+    opts.email = config.letsencrypt.mail;
+    opts.agreeTos = true;
+
+    cb(null, { options: opts, certs: certs });
   }
 });
 
-var server = https.createServer(lex.httpsOptions, LEX.createAcmeResponder(lex, app));
+var server
+if(config.debug) {
+  var server = http.createServer(app);
+} else {
+  server = https.createServer(lex.httpsOptions, lex.middleware(app));
+}
+
 var io = require('socket.io')(server);
 server.listen(config.http.port, function () {
-  console.log('Listening on ' + config.http.port);
+  console.log('Listening on ' + config.http.port, this.address());
 });
 
 io.use(socketioJwt.authorize({
@@ -109,7 +116,7 @@ io.use(socketioJwt.authorize({
 }));
 
 io.sockets.on('connection', function (socket) {
-  var docUser = socket.decoded_token._doc;
+  var docUser = socket.decoded_token;
   mongo.updateUserStatus(docUser.usr, 1, Date(), function() {
     mongo.getFullUserByUsername(docUser.usr, function (user) {
       console.log(user.firstname + ' is now online');
@@ -143,7 +150,6 @@ io.sockets.on('connection', function (socket) {
   socket.on('sendMessage', function(message){
     mongo.createNewMessage(users[socket.id]._id, message, function(done) {
       if(done) {
-        console.log(users[socket.id].firstname + ': ' + message);
         io.sockets.emit('newMessage', {msg: message, user: users[socket.id]});
       }
     });
