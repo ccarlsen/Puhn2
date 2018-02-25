@@ -23,6 +23,13 @@ var storageProperties = multer.diskStorage({
 });
 var upload = multer({storage: storageProperties}).single('file');
 
+var allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+  res.header('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+}
+
 //Chat Variables
 var users = {};
 var sockets = [];
@@ -31,6 +38,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: false
 }));
+app.use(allowCrossDomain);
 app.use(express.static(__dirname + '/public'));
 
 app.post('/login', function (req, res) {
@@ -41,14 +49,13 @@ app.post('/login', function (req, res) {
         res.json({token: token});
       });
     } else {
-      res.status(401).send('login incorrect');
+      res.status(401).send({'message': 'login incorrect'});
     }
   });
 });
 
 app.get('/webms', function (req, res) {
 	res.header("Content-Type", "application/json");
-	res.header("Access-Control-Allow-Origin", "*");
 	mongo.getAllWebms(function(webms) {
 		res.status(200).send(JSON.stringify(webms));
 	});
@@ -63,7 +70,6 @@ app.delete('/webms/:id', function (req, res) {
 
 app.get('/sounds', function (req, res) {
 	res.header("Content-Type", "application/json");
-	res.header("Access-Control-Allow-Origin", "*");
 	mongo.getAllSounds(function(sounds) {
 		res.status(200).send(JSON.stringify(sounds));
 	});
