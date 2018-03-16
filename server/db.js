@@ -39,6 +39,7 @@ var chatMessageSchema = mongoose.Schema({
     ref: 'User'
   },
   msg: String,
+  webm: Object,
   created: {
     type: Date,
     default: Date.now
@@ -287,10 +288,11 @@ exports.getAllUser = function (callback) {
  * @param {} callback
  * @return
  */
-exports.createNewMessage = function (creator, message, callback) {
+exports.createNewMessage = function (creator, message, webm, callback) {
     var newMessage = new mongoMessage({
         _creator: creator,
-        msg: message
+        msg: message,
+        webm: webm
     });
     //Save message
     newMessage.save(function (err, user) {

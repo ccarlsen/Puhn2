@@ -154,9 +154,17 @@ io.sockets.on('connection', function (socket) {
 
   //Messages Chat to Chat
   socket.on('sendMessage', function(message){
-    mongo.createNewMessage(users[socket.id]._id, message, function(done) {
+    mongo.createNewMessage(users[socket.id]._id, message, null, function(done) {
       if(done) {
-        io.sockets.emit('newMessage', {msg: message, user: users[socket.id]});
+        io.sockets.emit('newMessage', {msg: message, user: users[socket.id], webm: null});
+      }
+    });
+  });
+
+  socket.on('sendWebm', function(webm){
+    mongo.createNewMessage(users[socket.id]._id, null, webm, function(done) {
+      if(done) {
+        io.sockets.emit('newMessage', {msg: null, user: users[socket.id], webm: webm});
       }
     });
   });
